@@ -60,9 +60,9 @@ make run-bin           # compile first, then execute ./bin/go-resume
   "selectedTemplate": 10,
   "headings": { "work": "Experience" },
   "basics": {
-    "name": "Ray Yang",
-    "email": "ray@example.com",
-    "website": "rayspock.com",
+    "name": "Alex Johnson",
+    "email": "alex@example.com",
+    "website": "example.com",
     "location": { "address": "London" },
     "summaries": ["Backend engineer specialising in Go microservices."]
   },

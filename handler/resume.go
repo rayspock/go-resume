@@ -76,8 +76,7 @@ func (h *ResumeHandler) GeneratePDF(w http.ResponseWriter, r *http.Request) {
 // Unknown IDs fall back to the classic template.
 func templateForID(id int) string {
 	templates := map[int]string{
-		1:  "classic.html",
-		10: "classic.html",
+		1: "classic.html",
 	}
 	if name, ok := templates[id]; ok {
 		return name
