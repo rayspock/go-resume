@@ -1,42 +1,56 @@
 # go-resume
 
-A minimal Go backend that generates PDF resumes from structured JSON input.
+A monorepo resume builder — a Next.js frontend for editing resumes live, backed by a Go service that renders them to PDF via headless Chrome.
 
-## Architecture
+## Repository layout
 
 ```
 go-resume/
-├── main.go                    # HTTP server bootstrap, logging middleware
-├── model/
-│   └── resume.go              # Domain types (Resume, Basics, Work, …)
-├── renderer/
-│   ├── renderer.go            # html/template engine, embed templates
-│   └── templates/
-│       └── classic.html       # A4-styled HTML resume template
-├── pdf/
-│   └── generator.go           # chromedp → headless Chrome → PDF bytes
-└── handler/
-    └── resume.go              # HTTP handler, request parsing, response writing
+├── Makefile                       # Root task runner for both services
+├── pnpm-workspace.yaml            # pnpm monorepo definition
+├── apps/
+│   └── web/                       # Next.js frontend (App Router)
+│       ├── app/
+│       │   ├── page.tsx           # Landing page (server component)
+│       │   └── editor/page.tsx    # Resume editor (client component)
+│       ├── components/            # ResumeForm, ResumePreview, …
+│       └── lib/api.ts             # PDF generation API client
+└── services/
+    └── api/                       # Go HTTP service
+        ├── main.go                # Server bootstrap, logging middleware
+        ├── model/resume.go        # Domain types (Resume, Basics, Work, …)
+        ├── renderer/              # html/template engine + templates
+        ├── pdf/generator.go       # chromedp → headless Chrome → PDF bytes
+        └── handler/resume.go      # HTTP handler, request parsing
 ```
 
 ## Prerequisites
 
 * Go 1.22+
 * Google Chrome (or Chromium) installed and on your `PATH`
+* Node.js 18+ and [pnpm](https://pnpm.io)
 * `make`
 
-## Makefile targets
+## Getting started
+
+Install frontend dependencies (one-time):
+
+```bash
+pnpm install
+```
+
+## Root Makefile targets
 
 ```
-  build          Compile binary into ./bin/
-  run            go run . (PORT defaults to 8080)
-  run-bin        Build then run the compiled binary
-  test           Run all tests with race detector
-  fmt            Format source with gofmt
-  vet            Static analysis via go vet
-  lint           Full lint via golangci-lint (must be installed)
-  tidy           Tidy and verify go.mod / go.sum
-  clean          Remove ./bin/
+  dev            Start both API and web dev servers in parallel
+  api-run        Run the Go API (PORT defaults to 8080)
+  api-build      Build the Go API binary
+  api-test       Run Go tests with race detector
+  api-lint       Lint the Go API via golangci-lint
+  web-dev        Start the Next.js dev server
+  web-build      Build the Next.js app for production
+  web-lint       Lint the Next.js app
+  help           Show this help message
 ```
 
 Run `make help` to see the same list at any time.
@@ -44,10 +58,13 @@ Run `make help` to see the same list at any time.
 ## Running locally
 
 ```bash
-make run               # go run . on :8080
-PORT=9090 make run     # custom port
-make run-bin           # compile first, then execute ./bin/go-resume
+make dev               # start API (:8080) + web (:3000) in parallel
+make api-run           # Go API only
+make web-dev           # Next.js only
+PORT=9090 make api-run # custom port
 ```
+
+Open [http://localhost:3000](http://localhost:3000) to use the editor.
 
 ## API
 
@@ -57,7 +74,7 @@ make run-bin           # compile first, then execute ./bin/go-resume
 
 ```json
 {
-  "selectedTemplate": 10,
+  "selectedTemplate": 1,
   "headings": { "work": "Experience" },
   "basics": {
     "name": "Alex Johnson",
@@ -108,7 +125,7 @@ make run-bin           # compile first, then execute ./bin/go-resume
 curl -X POST http://localhost:8080/resume/pdf \
   -H "Content-Type: application/json" \
   -d @example.local.json \
-  -o output/resume.local.pdf
+  -o services/api/output/resume.local.pdf
 ```
 
 > **Local-only files** — any file matching `*.local.json` or `*.pdf` is git-ignored.
@@ -123,6 +140,7 @@ curl -X POST http://localhost:8080/resume/pdf \
 | Add a new template | Drop a `*.html` file in `renderer/templates/` and map its ID in `handler/resume.go:templateForID` |
 | Add new resume fields | Extend structs in `model/resume.go`, reference them in the template |
 | Swap PDF backend | Implement the `handler.PDFGenerator` interface |
+| Add a new page | Create `apps/web/app/<route>/page.tsx` |
 | Add database / persistence | Wire a repository layer in `main.go` and inject into handlers |
 
 ## Copilot instructions

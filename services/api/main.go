@@ -31,7 +31,7 @@ func main() {
 
 	srv := &http.Server{
 		Addr:         addr,
-		Handler:      logMiddleware(logger, mux),
+		Handler:      logMiddleware(logger, corsMiddleware(mux)),
 		ReadTimeout:  10 * time.Second,
 		WriteTimeout: 60 * time.Second,
 		IdleTimeout:  120 * time.Second,
@@ -48,6 +48,24 @@ func listenAddr() string {
 		return ":" + port
 	}
 	return ":8080"
+}
+
+// corsMiddleware sets permissive CORS headers for the configured allowed origin.
+func corsMiddleware(next http.Handler) http.Handler {
+	origin := os.Getenv("ALLOWED_ORIGIN")
+	if origin == "" {
+		origin = "http://localhost:3000"
+	}
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		w.Header().Set("Access-Control-Allow-Origin", origin)
+		w.Header().Set("Access-Control-Allow-Methods", "POST, OPTIONS")
+		w.Header().Set("Access-Control-Allow-Headers", "Content-Type")
+		if r.Method == http.MethodOptions {
+			w.WriteHeader(http.StatusNoContent)
+			return
+		}
+		next.ServeHTTP(w, r)
+	})
 }
 
 // logMiddleware logs method, path, and latency for every request.
