@@ -1,0 +1,37 @@
+# Binaries
+bin/
+*.exe
+*.exe~
+*.dll
+*.so
+*.dylib
+
+# Test binary
+*.test
+
+# Go build cache
+*.out
+
+# Dependency vendor directory (if not vendoring)
+vendor/
+
+# Environment files
+.env
+.env.*
+
+# OS artefacts
+.DS_Store
+Thumbs.db
+
+# Editor / IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# Local test payloads (never commit)
+*.local.json
+
+# Generated PDF output
+*.pdf
+
