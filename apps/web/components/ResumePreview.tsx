@@ -49,15 +49,20 @@ export default function ResumePreview({ resume: data }: Props) {
     );
   }
 
+  // Use an iframe + srcDoc so the template's embedded <style> is fully
+  // isolated from Tailwind preflight and the surrounding app styles.
+  // A4: 210 mm ≈ 794 px wide, 297 mm ≈ 1123 px tall.
   return (
-    /* Outer container: A4 aspect ratio, scrollable */
     <div className="overflow-auto rounded-lg border bg-white shadow-sm">
-      {/* Scale the A4 page (210 mm ≈ 794 px) to fit the panel */}
-      {/* Render server-generated resume HTML — content is trusted (own backend) */}
-      <div
-        style={{ width: 794, transformOrigin: "top left" }}
-        className="pointer-events-none"
-        dangerouslySetInnerHTML={{ __html: html }}
+      <iframe
+        title="Resume Preview"
+        srcDoc={html}
+        style={{
+          width: 794,
+          minHeight: 1123,
+          border: "none",
+          display: "block",
+        }}
       />
     </div>
   );
