@@ -1,48 +1,34 @@
-BINARY    := go-resume
-MODULE    := github.com/rayspock/go-resume
-BUILD_DIR := bin
-PORT      ?= 8080
+.PHONY: api-build api-run api-test api-lint web-dev web-build web-lint dev help
 
-# Go tool flags
-GOFLAGS   := -trimpath
-LDFLAGS   := -s -w
+## ── Go API ────────────────────────────────────────────────────────────────
+api-build: ## Build the Go API binary
+	$(MAKE) -C services/api build
 
-.PHONY: all build run test lint fmt vet tidy clean help
+api-run: ## Run the Go API (PORT defaults to 8080)
+	$(MAKE) -C services/api run
 
-all: build ## Default: build the binary
+api-test: ## Test the Go API
+	$(MAKE) -C services/api test
 
-## ── Build ─────────────────────────────────────────────────────────────────
-build: ## Build the binary into ./bin/
-	@mkdir -p $(BUILD_DIR)
-	go build $(GOFLAGS) -ldflags "$(LDFLAGS)" -o $(BUILD_DIR)/$(BINARY) .
+api-lint: ## Lint the Go API
+	$(MAKE) -C services/api lint
 
-## ── Run ───────────────────────────────────────────────────────────────────
-run: ## Run the service directly with go run (PORT defaults to 8080)
-	PORT=$(PORT) go run .
+## ── Next.js web ───────────────────────────────────────────────────────────
+web-dev: ## Start the Next.js dev server
+	pnpm --filter web dev
 
-run-bin: build ## Build then run the compiled binary
-	PORT=$(PORT) ./$(BUILD_DIR)/$(BINARY)
+web-build: ## Build the Next.js app for production
+	pnpm --filter web build
 
-## ── Code quality ──────────────────────────────────────────────────────────
-test: ## Run all tests
-	go test ./... -v -race -timeout 60s
+web-lint: ## Lint the Next.js app
+	pnpm --filter web lint
 
-vet: ## Run go vet
-	go vet ./...
+web-lint-fix: ## Fix linting issues in the Next.js app
+	pnpm --filter web lint --fix
 
-fmt: ## Format all Go source files
-	gofmt -w -s .
-
-lint: ## Run golangci-lint (must be installed: https://golangci-lint.run)
-	golangci-lint run ./...
-
-tidy: ## Tidy and verify go.mod / go.sum
-	go mod tidy
-	go mod verify
-
-## ── Maintenance ───────────────────────────────────────────────────────────
-clean: ## Remove build artefacts
-	rm -rf $(BUILD_DIR)
+## ── Combined ──────────────────────────────────────────────────────────────
+dev: ## Start both API and web dev servers in parallel
+	$(MAKE) -j2 api-run web-dev
 
 ## ── Help ──────────────────────────────────────────────────────────────────
 help: ## Show this help message
