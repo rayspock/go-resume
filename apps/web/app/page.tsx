@@ -1,4 +1,5 @@
 import { buttonVariants } from "@/components/ui/button";
+import { APP_NAME } from "@/lib/config";
 import { cn } from "@/lib/utils";
 import { Download, FileText, Zap } from "lucide-react";
 import Link from "next/link";
@@ -15,7 +16,7 @@ export default function LandingPage() {
         {/* Headline */}
         <div className="flex flex-col gap-3">
           <h1 className="text-5xl font-bold tracking-tight text-zinc-900">
-            <span className="text-blue-600">Go Resume</span>
+            <span className="text-blue-600">{APP_NAME}</span>
             <br />
             build, preview, export PDF
           </h1>

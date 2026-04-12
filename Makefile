@@ -23,6 +23,9 @@ web-build: ## Build the Next.js app for production
 web-lint: ## Lint the Next.js app
 	pnpm --filter web lint
 
+web-lint-fix: ## Fix linting issues in the Next.js app
+	pnpm --filter web lint --fix
+
 ## ── Combined ──────────────────────────────────────────────────────────────
 dev: ## Start both API and web dev servers in parallel
 	$(MAKE) -j2 api-run web-dev

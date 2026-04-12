@@ -50,6 +50,7 @@ pnpm install
   web-dev        Start the Next.js dev server
   web-build      Build the Next.js app for production
   web-lint       Lint the Next.js app
+  web-lint-fix   Lint and auto-fix fixable issues in the Next.js app
   help           Show this help message
 ```
 

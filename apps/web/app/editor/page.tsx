@@ -5,6 +5,7 @@ import ResumePreview from "@/components/ResumePreview";
 import TemplateSelector from "@/components/TemplateSelector";
 import { Button } from "@/components/ui/button";
 import { type ResumeData, generatePDF } from "@/lib/api";
+import { APP_NAME } from "@/lib/config";
 import { FileDown, Loader2 } from "lucide-react";
 import { useReducer, useState } from "react";
 
@@ -61,7 +62,7 @@ export default function EditorPage() {
     <div className="flex h-screen flex-col overflow-hidden">
       {/* ── Top bar ── */}
       <header className="flex items-center justify-between border-b bg-white px-6 py-3 shadow-sm">
-        <h1 className="text-lg font-semibold tracking-tight">Resume Builder</h1>
+        <h1 className="text-lg font-semibold tracking-tight">{APP_NAME}</h1>
         <div className="flex items-center gap-3">
           {pdfError && (
             <span className="text-sm text-destructive">{pdfError}</span>
