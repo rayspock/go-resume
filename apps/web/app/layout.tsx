@@ -13,8 +13,9 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Resume Builder",
-  description: "Build and export a professional resume as PDF",
+  title: "Go Resume",
+  description:
+    "Build your resume, preview it live, and export a pixel-perfect PDF — powered by Go and headless Chrome.",
 };
 
 export default function RootLayout({

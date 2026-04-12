@@ -15,9 +15,9 @@ export default function LandingPage() {
         {/* Headline */}
         <div className="flex flex-col gap-3">
           <h1 className="text-5xl font-bold tracking-tight text-zinc-900">
-            Build your resume,
+            <span className="text-blue-600">Go Resume</span>
             <br />
-            <span className="text-blue-600">download as PDF</span>
+            build, preview, export PDF
           </h1>
           <p className="text-lg text-zinc-500">
             Fill in a simple form, see a live preview, and export a
