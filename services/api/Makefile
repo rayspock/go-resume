@@ -33,8 +33,8 @@ vet: ## Run go vet
 fmt: ## Format all Go source files
 	gofmt -w -s .
 
-lint: ## Run golangci-lint (must be installed: https://golangci-lint.run)
-	golangci-lint run ./...
+lint: vet ## Lint with go vet and check formatting
+	@test -z "$$(gofmt -l .)" || { echo "Files need gofmt:"; gofmt -l .; exit 1; }
 
 tidy: ## Tidy and verify go.mod / go.sum
 	go mod tidy

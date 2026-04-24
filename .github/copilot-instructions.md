@@ -115,11 +115,12 @@ rm -rf /tmp/cc-skills-golang
 
 | Target | Purpose |
 |---|---|
+| `make lint` | Lint both API and web |
 | `make dev` | Start API (:8080) + web (:3000) in parallel |
 | `make api-run` | Run Go API only |
 | `make api-build` | Compile Go binary |
 | `make api-test` | Run Go tests with race detector |
-| `make api-lint` | Lint Go code via golangci-lint |
+| `make api-lint` | Lint Go code (vet + fmt check) |
 | `make web-dev` | Start Next.js dev server |
 | `make web-build` | Build Next.js for production |
 | `make web-lint` | Lint frontend via Biome |
@@ -133,7 +134,7 @@ rm -rf /tmp/cc-skills-golang
 | `make test` | Run tests with race detector |
 | `make fmt` | Format source with `gofmt` |
 | `make vet` | Static analysis via `go vet` |
-| `make lint` | Full lint via `golangci-lint` |
+| `make lint` | Lint via `go vet` + format check |
 | `make tidy` | Tidy and verify modules |
 | `make clean` | Remove `./bin/` |
 
