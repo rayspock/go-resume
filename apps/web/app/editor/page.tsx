@@ -62,7 +62,7 @@ export default function EditorPage() {
   return (
     <div className="flex h-screen flex-col overflow-hidden">
       {/* ── Top bar ── */}
-      <header className="flex items-center justify-between border-b bg-white px-6 py-3 shadow-sm">
+      <header className="flex items-center justify-between border-b bg-card px-6 py-3 shadow-sm">
         <h1 className="text-lg font-semibold tracking-tight">{APP_NAME}</h1>
         <div className="flex items-center gap-3">
           {pdfError && (
@@ -82,7 +82,7 @@ export default function EditorPage() {
       {/* ── Split layout ── */}
       <div className="flex flex-1 overflow-hidden">
         {/* Left — form panel */}
-        <aside className="flex w-96 shrink-0 flex-col gap-4 overflow-y-auto border-r bg-zinc-50 p-5">
+        <aside className="flex w-96 shrink-0 flex-col gap-4 overflow-y-auto border-r bg-background p-5">
           <TemplateSelector
             value={resume.selectedTemplate}
             onChange={(id) => dispatch({ type: "SET_TEMPLATE", payload: id })}
@@ -96,7 +96,7 @@ export default function EditorPage() {
         </aside>
 
         {/* Right — preview panel */}
-        <main className="flex-1 overflow-auto bg-zinc-100 p-6">
+        <main className="flex-1 overflow-auto bg-muted p-6">
           <ResumePreview resume={resume} />
         </main>
       </div>
