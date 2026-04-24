@@ -88,10 +88,6 @@ func templateForID(id int) string {
 
 // RenderHTML handles POST /resume/html — returns the rendered HTML for live preview.
 func (h *ResumeHandler) RenderHTML(w http.ResponseWriter, r *http.Request) {
-	ctx, cancel := context.WithTimeout(r.Context(), h.requestTimeout)
-	defer cancel()
-	_ = ctx
-
 	var resume model.Resume
 	dec := json.NewDecoder(r.Body)
 	dec.DisallowUnknownFields()

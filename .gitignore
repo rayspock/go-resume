@@ -60,9 +60,10 @@ coverage/
 # Certificates
 *.pem
 
-# Agent skills — .agents/ and skills-lock.json are committed.
-# Ignore per-tool symlink dirs created by `npx skills add`.
+# Agent skills — only .agents/ is committed.
+# Ignore per-tool symlink dirs that some AI tools may create.
 /skills/
+skills-lock.json
 .claude/
 .copilot/
 .cursor/

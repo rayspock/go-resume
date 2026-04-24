@@ -43,11 +43,11 @@ loaded on demand when a task matches their description.
 To update skills:
 
 ```bash
-npx skills add https://github.com/samber/cc-skills-golang --all
+git clone --depth 1 https://github.com/samber/cc-skills-golang.git /tmp/cc-skills-golang
+rm -rf .agents/skills/golang-*
+cp -r /tmp/cc-skills-golang/skills/* .agents/skills/
+rm -rf /tmp/cc-skills-golang
 ```
-
-Only `.agents/` is committed. Per-tool symlink directories (`.claude/`, `.cursor/`,
-etc.) are gitignored.
 
 ## Coding conventions
 
