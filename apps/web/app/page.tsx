@@ -1,7 +1,7 @@
 import { buttonVariants } from "@/components/ui/button";
 import { APP_NAME } from "@/lib/config";
 import { cn } from "@/lib/utils";
-import { Download, FileText, Zap } from "lucide-react";
+import { Download, FileText, Upload, Zap } from "lucide-react";
 import Link from "next/link";
 
 export default function LandingPage() {
@@ -26,13 +26,26 @@ export default function LandingPage() {
           </p>
         </div>
 
-        {/* CTA */}
-        <Link
-          href="/editor"
-          className={cn(buttonVariants({ size: "lg" }), "gap-2 px-8 text-base")}
-        >
-          Start Building
-        </Link>
+        {/* CTAs */}
+        <div className="flex items-center gap-4">
+          <Link
+            href="/editor"
+            className={cn(buttonVariants({ size: "lg" }), "gap-2 px-8 text-base")}
+          >
+            <FileText className="h-4 w-4" />
+            New Resume
+          </Link>
+          <Link
+            href="/editor?import=true"
+            className={cn(
+              buttonVariants({ variant: "outline", size: "lg" }),
+              "gap-2 px-8 text-base",
+            )}
+          >
+            <Upload className="h-4 w-4" />
+            Import JSON
+          </Link>
+        </div>
 
         {/* Feature pills */}
         <div className="flex flex-wrap justify-center gap-3 text-sm text-muted-foreground">
