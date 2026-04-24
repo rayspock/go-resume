@@ -16,6 +16,7 @@ const INITIAL_RESUME: ResumeData = {
     name: "",
     email: "",
     website: "",
+    linkedin: "",
     location: { address: "" },
     summaries: [""],
   },

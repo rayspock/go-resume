@@ -9,10 +9,11 @@
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
     body {
-      font-family: 'Segoe UI', Helvetica, Arial, sans-serif;
-      font-size: 10.5pt;
+      font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+      font-size: 9pt;
       color: #2d2d2d;
       background: #fff;
+      line-height: 1.45;
       -webkit-print-color-adjust: exact;
       print-color-adjust: exact;
     }
@@ -22,171 +23,188 @@
       width: 210mm;
       min-height: 297mm;
       margin: 0 auto;
-      padding: 14mm 16mm 14mm 16mm;
+      padding: 12mm 16mm 12mm 16mm;
       background: #fff;
     }
 
-    /* ── Header / hero ─────────────────────────────────────────────── */
+    /* ── Header ────────────────────────────────────────────────────── */
     .header {
-      display: flex;
-      justify-content: space-between;
-      align-items: flex-end;
-      padding-bottom: 10px;
-      border-bottom: 2.5px solid #1a73e8;
-      margin-bottom: 14px;
+      text-align: center;
+      margin-bottom: 10px;
     }
 
-    .header-left h1 {
-      font-size: 22pt;
+    .header h1 {
+      font-size: 24pt;
       font-weight: 700;
       color: #1a1a1a;
       letter-spacing: -0.3px;
-      line-height: 1.15;
+      margin-bottom: 6px;
     }
 
-    .header-right {
-      text-align: right;
+    .header-contact {
       font-size: 9pt;
-      color: #555;
-      line-height: 1.65;
+      color: #444;
+      line-height: 1.6;
     }
 
-    .header-right a {
-      color: #1a73e8;
+    .header-contact a {
+      color: #444;
       text-decoration: none;
+    }
+
+    .header-contact .sep {
+      margin: 0 6px;
+      color: #999;
     }
 
     /* ── Section layout ─────────────────────────────────────────────── */
     .section {
-      margin-bottom: 14px;
+      margin-bottom: 10px;
     }
 
     .section-title {
-      font-size: 10pt;
+      font-size: 13pt;
       font-weight: 700;
       text-transform: uppercase;
-      letter-spacing: 0.8px;
-      color: #1a73e8;
-      border-bottom: 1px solid #d0e4fc;
-      padding-bottom: 3px;
-      margin-bottom: 8px;
+      color: #1a1a1a;
+      border-bottom: 1.5px solid #1a1a1a;
+      padding-bottom: 2px;
+      margin-bottom: 6px;
+      letter-spacing: 0.5px;
     }
 
     /* ── Summary ────────────────────────────────────────────────────── */
     .summary p {
-      line-height: 1.55;
+      font-size: 9pt;
+      line-height: 1.5;
       color: #333;
-      margin-bottom: 5px;
+      margin-bottom: 3px;
     }
 
     /* ── Skills ─────────────────────────────────────────────────────── */
     .skills-group {
-      margin-bottom: 4px;
+      margin-bottom: 2px;
+      font-size: 10pt;
+      line-height: 1.5;
     }
 
     .skills-group .skill-label {
-      font-weight: 600;
-      margin-right: 6px;
+      font-style: italic;
+      margin-right: 4px;
     }
 
-    .skill-tag {
-      display: inline-block;
-      background: #e8f0fe;
-      color: #1a56c4;
-      border-radius: 3px;
-      padding: 1px 7px;
-      font-size: 9pt;
-      margin: 2px 3px 2px 0;
+    .skills-group .skill-keywords {
+      color: #333;
     }
 
     /* ── Work / Experience ──────────────────────────────────────────── */
     .entry {
-      margin-bottom: 11px;
+      margin-bottom: 8px;
     }
 
     .entry-header {
       display: flex;
       justify-content: space-between;
       align-items: baseline;
+      font-size: 10pt;
     }
 
-    .entry-header .company {
+    .entry-header .position {
       font-weight: 700;
-      font-size: 10.5pt;
       color: #1a1a1a;
     }
 
     .entry-header .dates {
-      font-size: 9pt;
-      color: #666;
+      font-size: 10pt;
+      color: #333;
       white-space: nowrap;
     }
 
     .entry-meta {
-      font-size: 9.5pt;
+      font-size: 10pt;
+      font-style: italic;
       color: #555;
-      margin-bottom: 5px;
-    }
-
-    .entry-meta .position {
-      font-weight: 600;
-      color: #333;
+      margin-bottom: 3px;
     }
 
     .entry ul {
-      padding-left: 15px;
+      padding-left: 16px;
+      list-style-type: disc;
     }
 
     .entry ul li {
+      font-size: 9pt;
       line-height: 1.5;
-      margin-bottom: 2px;
-      font-size: 9.5pt;
-      color: #3a3a3a;
+      margin-bottom: 1px;
+      color: #333;
     }
 
     /* ── Projects ───────────────────────────────────────────────────── */
     .project {
-      margin-bottom: 9px;
+      margin-bottom: 6px;
     }
 
     .project-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: baseline;
+      font-size: 10pt;
+      line-height: 1.5;
     }
 
     .project-header .project-name {
       font-weight: 700;
-      font-size: 10pt;
     }
 
-    .project-header a {
-      font-size: 8.5pt;
-      color: #1a73e8;
+    .project-header .project-keywords {
+      font-style: italic;
+      color: #555;
+      margin-left: 4px;
+    }
+
+    .project-header .project-url {
+      margin-left: 6px;
+      color: #333;
       text-decoration: none;
-    }
-
-    .project-keywords {
-      font-size: 8.5pt;
-      color: #888;
-      margin-bottom: 2px;
+      font-style: normal;
     }
 
     .project-desc {
-      font-size: 9.5pt;
-      color: #3a3a3a;
+      font-size: 9pt;
+      color: #333;
       line-height: 1.5;
     }
 
     /* ── Education ──────────────────────────────────────────────────── */
     .education-entry {
-      margin-bottom: 8px;
+      margin-bottom: 6px;
+    }
+
+    .edu-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      font-size: 10pt;
+    }
+
+    .edu-header .degree {
+      font-weight: 700;
+      color: #1a1a1a;
+    }
+
+    .edu-header .dates {
+      font-size: 10pt;
+      color: #333;
+      white-space: nowrap;
+    }
+
+    .edu-meta {
+      font-size: 10pt;
+      font-style: italic;
+      color: #555;
     }
 
     /* ── Print overrides ────────────────────────────────────────────── */
     @media print {
       body { background: #fff; }
-      .page { padding: 12mm 14mm; }
+      .page { padding: 10mm 14mm; }
       a { color: inherit; text-decoration: none; }
     }
   </style>
@@ -196,20 +214,20 @@
 
   <!-- ── Header ──────────────────────────────────────────── -->
   <div class="header">
-    <div class="header-left">
-      <h1>{{ .Basics.Name }}</h1>
-    </div>
-    <div class="header-right">
-      {{ if .Basics.Email }}<div><a href="mailto:{{ .Basics.Email }}">{{ .Basics.Email }}</a></div>{{ end }}
-      {{ if .Basics.Location.Address }}<div>{{ .Basics.Location.Address }}</div>{{ end }}
-      {{ if .Basics.Website }}<div><a href="https://{{ .Basics.Website }}">{{ .Basics.Website }}</a></div>{{ end }}
+    <h1>{{ .Basics.Name }}</h1>
+    <div class="header-contact">
+      {{- $sep := false -}}
+      {{ if .Basics.Email }}{{ if $sep }}<span class="sep">|</span>{{ end }}<a href="mailto:{{ .Basics.Email }}">{{ .Basics.Email }}</a>{{ $sep = true }}{{ end }}
+      {{ if .Basics.Location.Address }}{{ if $sep }}<span class="sep">|</span>{{ end }}{{ .Basics.Location.Address }}{{ $sep = true }}{{ end }}
+      {{ if .Basics.LinkedIn }}{{ if $sep }}<span class="sep">|</span>{{ end }}<a href="https://{{ .Basics.LinkedIn }}">{{ .Basics.LinkedIn }}</a>{{ $sep = true }}{{ end }}
+      {{ if .Basics.Website }}{{ if $sep }}<span class="sep">|</span>{{ end }}<a href="https://{{ .Basics.Website }}">{{ .Basics.Website }}</a>{{ $sep = true }}{{ end }}
     </div>
   </div>
 
   <!-- ── Summary ─────────────────────────────────────────── -->
   {{ if .Basics.Summaries }}
   <div class="section summary">
-    <div class="section-title">Profile</div>
+    <div class="section-title">Summary</div>
     {{ range .Basics.Summaries }}
     <p>{{ . }}</p>
     {{ end }}
@@ -222,8 +240,8 @@
     <div class="section-title">Skills</div>
     {{ range .Skills }}
     <div class="skills-group">
-      {{ if .Name }}<span class="skill-label">{{ .Name }}:</span>{{ end }}
-      {{ range .Keywords }}<span class="skill-tag">{{ . }}</span>{{ end }}
+      {{ if .Name }}<span class="skill-label">{{ .Name }}</span>{{ end }}
+      <span class="skill-keywords">{{ range $i, $k := .Keywords }}{{ if $i }}, {{ end }}{{ $k }}{{ end }}</span>
     </div>
     {{ end }}
   </div>
@@ -236,12 +254,11 @@
     {{ range .Work }}
     <div class="entry">
       <div class="entry-header">
-        <span class="company">{{ .Company }}</span>
-        <span class="dates">{{ .StartDate }}{{ if .EndDate }} – {{ .EndDate }}{{ end }}</span>
+        <span class="position">{{ .Position }}</span>
+        <span class="dates">{{ .StartDate }}{{ if .EndDate }} - {{ .EndDate }}{{ end }}</span>
       </div>
       <div class="entry-meta">
-        <span class="position">{{ .Position }}</span>
-        {{ if .Location }} · {{ .Location }}{{ end }}
+        {{ .Company }}{{ if .Location }}, {{ .Location }}{{ end }}
       </div>
       {{ if .Highlights }}
       <ul>
@@ -261,11 +278,9 @@
     <div class="project">
       <div class="project-header">
         <span class="project-name">{{ .Name }}</span>
-        {{ if .URL }}<a href="{{ .URL }}" target="_blank">{{ .URL }}</a>{{ end }}
+        {{ if .Keywords }}<span class="project-keywords">{{ range $i, $k := .Keywords }}{{ if $i }}, {{ end }}{{ $k }}{{ end }}</span>{{ end }}
+        {{ if .URL }}<a class="project-url" href="{{ .URL }}">{{ .URL }}</a>{{ end }}
       </div>
-      {{ if .Keywords }}
-      <div class="project-keywords">{{ range $i, $k := .Keywords }}{{ if $i }}, {{ end }}{{ $k }}{{ end }}</div>
-      {{ end }}
       {{ if .Description }}<div class="project-desc">{{ .Description }}</div>{{ end }}
     </div>
     {{ end }}
@@ -278,11 +293,13 @@
     <div class="section-title">Education</div>
     {{ range .Education }}
     <div class="education-entry">
-      <div class="entry-header">
-        <span class="company">{{ .Institution }}</span>
-        <span class="dates">{{ .StartDate }}{{ if .EndDate }} – {{ .EndDate }}{{ end }}</span>
+      <div class="edu-header">
+        <span class="degree">{{ .StudyType }}{{ if .Area }} - {{ .Area }}{{ end }}</span>
+        <span class="dates">{{ .StartDate }}{{ if .EndDate }} - {{ .EndDate }}{{ end }}</span>
       </div>
-      <div class="entry-meta">{{ .StudyType }}{{ if .Area }} in {{ .Area }}{{ end }}</div>
+      <div class="edu-meta">
+        {{ .Institution }}{{ if .GPA }} {{ .GPA }}{{ end }}
+      </div>
     </div>
     {{ end }}
   </div>

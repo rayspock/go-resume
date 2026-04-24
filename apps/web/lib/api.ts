@@ -9,6 +9,7 @@ export interface ResumeData {
     name: string;
     email: string;
     website: string;
+    linkedin: string;
     location: { address: string };
     summaries: string[];
   };
@@ -33,6 +34,7 @@ export interface ResumeData {
     studyType: string;
     startDate: string;
     endDate: string;
+    gpa: string;
   }>;
   sections: string[];
 }

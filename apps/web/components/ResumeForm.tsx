@@ -77,6 +77,15 @@ export default function ResumeForm({ resume, onChange }: Props) {
             />
           </div>
           <div className="flex flex-col gap-1.5">
+            <Label htmlFor="linkedin">LinkedIn</Label>
+            <Input
+              id="linkedin"
+              value={resume.basics.linkedin}
+              onChange={(e) => setBasics("linkedin", e.target.value)}
+              placeholder="linkedin.com/in/username"
+            />
+          </div>
+          <div className="flex flex-col gap-1.5">
             <Label htmlFor="location">Location</Label>
             <Input
               id="location"

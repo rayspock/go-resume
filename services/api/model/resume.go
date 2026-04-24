@@ -17,6 +17,7 @@ type Resume struct {
 type Basics struct {
 	Name      string   `json:"name"`
 	Website   string   `json:"website"`
+	LinkedIn  string   `json:"linkedin"`
 	Summaries []string `json:"summaries"`
 	Email     string   `json:"email"`
 	Location  Location `json:"location"`
@@ -54,4 +55,5 @@ type Education struct {
 	StudyType   string `json:"studyType"`
 	StartDate   string `json:"startDate"`
 	EndDate     string `json:"endDate"`
+	GPA         string `json:"gpa"`
 }
