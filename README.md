@@ -1,6 +1,13 @@
-# go-resume
+<p align="center">
+  <img src="apps/web/public/go-resume-logo.png" alt="Go Resume" width="200">
+</p>
 
-A monorepo resume builder — a **Next.js 16** frontend for editing resumes live, backed by a **Go** service that renders them to PDF via headless Chrome.
+<h1 align="center">go-resume</h1>
+
+<p align="center">
+  A monorepo resume builder — a <strong>Next.js 16</strong> frontend for editing resumes live,<br>
+  backed by a <strong>Go</strong> service that renders them to PDF via headless Chrome.
+</p>
 
 ## Repository layout
 
