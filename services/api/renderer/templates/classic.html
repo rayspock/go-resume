@@ -226,7 +226,7 @@
   <!-- ── Summary ─────────────────────────────────────────── -->
   {{ if .Basics.Summaries }}
   <div class="section summary">
-    <div class="section-title">Summary</div>
+    <div class="section-title">{{ heading $ "summary" "Summary" }}</div>
     {{ range .Basics.Summaries }}
     <p>{{ . }}</p>
     {{ end }}
@@ -236,7 +236,7 @@
   <!-- ── Skills ──────────────────────────────────────────── -->
   {{ if .Skills }}
   <div class="section">
-    <div class="section-title">Skills</div>
+    <div class="section-title">{{ heading $ "skills" "Skills" }}</div>
     {{ range .Skills }}
     <div class="skills-group">
       {{ if .Name }}<span class="skill-label">{{ .Name }}</span>{{ end }}
@@ -249,7 +249,7 @@
   <!-- ── Work Experience ─────────────────────────────────── -->
   {{ if .Work }}
   <div class="section">
-    <div class="section-title">{{ workHeading . }}</div>
+    <div class="section-title">{{ heading $ "work" "Experience" }}</div>
     {{ range .Work }}
     <div class="entry">
       <div class="entry-header">
@@ -272,7 +272,7 @@
   <!-- ── Projects ────────────────────────────────────────── -->
   {{ if .Projects }}
   <div class="section">
-    <div class="section-title">Projects</div>
+    <div class="section-title">{{ heading $ "projects" "Projects" }}</div>
     {{ range .Projects }}
     <div class="project">
       <div class="project-header">
@@ -289,7 +289,7 @@
   <!-- ── Education ───────────────────────────────────────── -->
   {{ if .Education }}
   <div class="section">
-    <div class="section-title">Education</div>
+    <div class="section-title">{{ heading $ "education" "Education" }}</div>
     {{ range .Education }}
     <div class="education-entry">
       <div class="edu-header">

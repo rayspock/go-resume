@@ -12,13 +12,13 @@ import (
 // newTemplateFuncs returns helpers available inside every template.
 func newTemplateFuncs() template.FuncMap {
 	return template.FuncMap{
-		"workHeading": func(r *model.Resume) string {
+		"heading": func(r *model.Resume, key, fallback string) string {
 			if r.Headings != nil {
-				if h, ok := r.Headings["work"]; ok && h != "" {
+				if h, ok := r.Headings[key]; ok && h != "" {
 					return h
 				}
 			}
-			return "Experience"
+			return fallback
 		},
 	}
 }

@@ -1,3 +1,4 @@
+import ContinueEditing from "@/components/ContinueEditing";
 import { buttonVariants } from "@/components/ui/button";
 import { APP_NAME } from "@/lib/config";
 import { cn } from "@/lib/utils";
@@ -32,7 +33,8 @@ export default function LandingPage() {
         </div>
 
         {/* CTAs */}
-        <div className="flex items-center gap-4">
+        <div className="flex flex-wrap items-center justify-center gap-4">
+          <ContinueEditing />
           <Link
             href="/editor"
             className={cn(

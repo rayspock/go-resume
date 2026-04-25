@@ -4,7 +4,7 @@
 
 `go-resume` is a monorepo resume builder. The **Go API** (`services/api`) converts
 structured JSON resume data into a PDF using headless Chrome via **chromedp**. The
-**Next.js frontend** (`apps/web`) provides a live editor that previews the resume and
+**Next.js 16 frontend** (`apps/web`) provides a live editor that previews the resume and
 triggers PDF generation via the API.
 
 ## Repository layout
@@ -18,19 +18,30 @@ go-resume/
 │   └── web/                           # Next.js frontend (App Router)
 │       ├── app/
 │       │   ├── page.tsx               # Landing page (server component)
-│       │   └── editor/page.tsx        # Resume editor (client component)
-│       ├── components/                # ResumeForm, ResumePreview, …
-│       ├── lib/api.ts                 # PDF + preview API client
+│       │   ├── editor/page.tsx        # Resume editor (client component)
+│       │   ├── icon.png               # Browser tab icon (32×32)
+│       │   ├── apple-icon.png         # Apple touch icon (180×180)
+│       │   └── favicon.ico            # Favicon (48×48)
+│       ├── components/
+│       │   ├── editors/               # Section editors (Profile, Skills, Experience, …)
+│       │   ├── SectionNav.tsx         # Left sidebar section navigation
+│       │   ├── ResumePreview.tsx      # Live iframe preview
+│       │   ├── ImportJsonDialog.tsx    # JSON import dialog
+│       │   ├── SkillListInput.tsx     # Tag-style skill keyword input
+│       │   └── ui/                    # shadcn/ui primitives
+│       ├── lib/
+│       │   ├── api.ts                 # PDF + preview API client
+│       │   └── config.ts              # App name and constants
 │       └── biome.json                 # Biome linter/formatter config
 └── services/
     └── api/                           # Go HTTP service
         ├── main.go                    # Server bootstrap, logging middleware
         ├── model/resume.go            # Domain types – source of truth for JSON shape
         ├── renderer/
-        │   ├── renderer.go            # Parses & executes html/template files
+        │   ├── renderer.go            # Parses & executes html/template files; heading() helper
         │   └── templates/classic.html # A4-styled resume template (CSS embedded)
         ├── pdf/generator.go           # chromedp integration; one Chrome context per request
-        └── handler/resume.go          # HTTP handler for POST /resume/pdf
+        └── handler/resume.go          # HTTP handler for POST /resume/pdf and /resume/html
 ```
 
 ## Agent skills
@@ -75,10 +86,24 @@ rm -rf /tmp/cc-skills-golang
   fully isolated from Tailwind preflight and the surrounding app.
 - **Component split**: keep server components (landing page) and client components
   (`"use client"` — editor, form, preview) clearly separated.
-- **Single state source**: the editor page owns the resume state; form and preview
-  are pure props-driven components.
+- **Single state source**: the editor page owns the resume state via `useReducer`;
+  section editors and preview are pure props-driven components.
 - **API client**: all backend calls go through `lib/api.ts`; never fetch directly
   from components.
+- **Section editors**: each section (Profile, Skills, Experience, Projects,
+  Education) has its own editor component in `components/editors/`. Each includes
+  an editable `SectionHeading` that updates `resume.headings[key]`.
+- **Favicons and icons**: placed in `app/` using the Next.js file convention
+  (`favicon.ico`, `icon.png`, `apple-icon.png`) — no manual `<link>` tags needed.
+
+## Keeping docs current
+
+After any structural change (new files, renamed components, new Makefile targets,
+new fields, new endpoints), update **both**:
+
+- `README.md` — repository layout tree, API examples, Makefile table, extending table.
+- `.github/copilot-instructions.md` — repository layout tree, coding conventions,
+  extending recipes, Makefile tables, dependencies table.
 
 ## Extending the project
 
@@ -87,15 +112,21 @@ rm -rf /tmp/cc-skills-golang
 1. Create `renderer/templates/<name>.html` — it receives a `*model.Resume`.
 2. Map a `selectedTemplate` integer to the new filename in
    `handler/resume.go:templateForID`.
-3. Any custom template functions go in `renderer/renderer.go:templateFuncs`.
+3. Use `{{ heading $ "key" "Default" }}` for section titles so headings are customisable.
+4. Any custom template functions go in `renderer/renderer.go:newTemplateFuncs`.
 
 ### Adding new resume fields
 
 1. Add the field to the appropriate struct in `model/resume.go`.
 2. Reference it in the relevant template(s).
 3. Update `ResumeData` in `apps/web/lib/api.ts` to mirror the new shape.
-4. Update the form component in `apps/web/components/ResumeForm.tsx` if the field
-   is user-editable.
+4. Update the relevant editor component in `apps/web/components/editors/`.
+
+### Adding a new section heading
+
+1. Add the key to the `headings` map in the initial resume state (`editor/page.tsx`).
+2. Use `<SectionHeading headingKey="key" defaultLabel="Label" />` in the editor.
+3. Use `{{ heading $ "key" "Label" }}` in the template.
 
 ### Adding a new endpoint
 
@@ -115,15 +146,18 @@ rm -rf /tmp/cc-skills-golang
 
 | Target | Purpose |
 |---|---|
-| `make lint` | Lint both API and web |
 | `make dev` | Start API (:8080) + web (:3000) in parallel |
+| `make lint` | Lint both API and web |
+| `make lint-fix` | Fix lint issues in both API and web |
 | `make api-run` | Run Go API only |
 | `make api-build` | Compile Go binary |
 | `make api-test` | Run Go tests with race detector |
 | `make api-lint` | Lint Go code (vet + fmt check) |
+| `make api-lint-fix` | Auto-format Go source files |
 | `make web-dev` | Start Next.js dev server |
 | `make web-build` | Build Next.js for production |
 | `make web-lint` | Lint frontend via Biome |
+| `make web-lint-fix` | Fix linting issues via Biome |
 
 ### services/api (run inside `services/api/`)
 
@@ -159,8 +193,9 @@ rm -rf /tmp/cc-skills-golang
 
 | Package | Purpose |
 |---|---|
-| `next` | React framework (App Router) |
+| `next` (16.x) | React framework (App Router, Turbopack) |
+| `react` (19.x) | UI library |
 | `@biomejs/biome` | Linting + formatting (replaces ESLint + Prettier) |
-| `tailwindcss` | Utility-first CSS |
+| `tailwindcss` (4.x) | Utility-first CSS |
 | `shadcn/ui` | Accessible UI components |
-
+| `lucide-react` | Icons |
