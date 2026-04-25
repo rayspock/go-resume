@@ -1,4 +1,4 @@
-.PHONY: api-build api-run api-test api-lint web-dev web-build web-lint web-lint-fix lint dev help
+.PHONY: api-build api-run api-test api-lint api-lint-fix web-dev web-build web-lint web-lint-fix lint lint-fix dev help
 
 ## ── Go API ────────────────────────────────────────────────────────────────
 api-build: ## Build the Go API binary
@@ -13,6 +13,9 @@ api-test: ## Test the Go API
 api-lint: ## Lint the Go API
 	$(MAKE) -C services/api lint
 
+api-lint-fix: ## Auto-format Go source files
+	$(MAKE) -C services/api fmt
+
 ## ── Next.js web ───────────────────────────────────────────────────────────
 web-dev: ## Start the Next.js dev server
 	pnpm --filter web dev
@@ -24,10 +27,12 @@ web-lint: ## Lint the Next.js app
 	pnpm --filter web lint
 
 web-lint-fix: ## Fix linting issues in the Next.js app
-	pnpm --filter web lint --fix
+	pnpm --filter web check
 
 ## ── Combined ──────────────────────────────────────────────────────────────
 lint: api-lint web-lint ## Lint both API and web
+
+lint-fix: api-lint-fix web-lint-fix ## Fix lint issues in both API and web
 
 dev: ## Start both API and web dev servers in parallel
 	$(MAKE) -j2 api-run web-dev

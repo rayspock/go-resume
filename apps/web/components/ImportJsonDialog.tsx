@@ -78,7 +78,8 @@ export default function ImportJsonDialog({
         <DialogHeader>
           <DialogTitle>Import Resume from JSON</DialogTitle>
           <DialogDescription>
-            Upload a JSON file matching the resume format to populate the editor.
+            Upload a JSON file matching the resume format to populate the
+            editor.
           </DialogDescription>
         </DialogHeader>
         <div className="flex flex-col gap-4 py-2">
@@ -92,9 +93,7 @@ export default function ImportJsonDialog({
               onChange={handleFile}
             />
           </div>
-          {error && (
-            <p className="text-sm text-destructive">{error}</p>
-          )}
+          {error && <p className="text-sm text-destructive">{error}</p>}
           <Button
             type="button"
             variant="outline"
@@ -109,4 +108,3 @@ export default function ImportJsonDialog({
     </Dialog>
   );
 }
-

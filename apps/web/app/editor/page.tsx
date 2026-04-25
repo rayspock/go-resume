@@ -112,7 +112,11 @@ function EditorContent() {
             )}
             {loading ? "Generating…" : "PDF"}
           </Button>
-          <Button onClick={handleExportJson} variant="outline" className="gap-2">
+          <Button
+            onClick={handleExportJson}
+            variant="outline"
+            className="gap-2"
+          >
             <FileJson className="h-4 w-4" />
             JSON
           </Button>

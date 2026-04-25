@@ -30,7 +30,10 @@ export default function LandingPage() {
         <div className="flex items-center gap-4">
           <Link
             href="/editor"
-            className={cn(buttonVariants({ size: "lg" }), "gap-2 px-8 text-base")}
+            className={cn(
+              buttonVariants({ size: "lg" }),
+              "gap-2 px-8 text-base",
+            )}
           >
             <FileText className="h-4 w-4" />
             New Resume

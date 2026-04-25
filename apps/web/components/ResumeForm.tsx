@@ -15,29 +15,45 @@ interface Props {
 }
 
 export default function ResumeForm({ resume, onChange }: Props) {
+  const defaults = {
+    name: "",
+    email: "",
+    website: "",
+    linkedin: "",
+    location: { address: "" },
+    summaries: [""],
+  };
+  const basics = {
+    ...defaults,
+    ...resume.basics,
+    location: { ...defaults.location, ...resume.basics?.location },
+    summaries: resume.basics?.summaries ?? defaults.summaries,
+  };
+
   const setBasics = (key: keyof ResumeData["basics"], value: string) =>
     onChange({
       ...resume,
-      basics: { ...resume.basics, [key]: value },
+      basics: { ...basics, [key]: value },
     });
 
   const setAddress = (value: string) =>
     onChange({
       ...resume,
-      basics: { ...resume.basics, location: { address: value } },
+      basics: { ...basics, location: { address: value } },
     });
 
   const setSummary = (value: string) =>
     onChange({
       ...resume,
-      basics: { ...resume.basics, summaries: [value] },
+      basics: { ...basics, summaries: [value] },
     });
 
   // ── Skills helpers ──
+  const skills = resume.skills ?? [];
   const addSkillGroup = () =>
     onChange({
       ...resume,
-      skills: [...resume.skills, { name: "", keywords: [] }],
+      skills: [...skills, { name: "", keywords: [] }],
     });
 
   const updateSkillGroup = (
@@ -45,7 +61,7 @@ export default function ResumeForm({ resume, onChange }: Props) {
     field: "name" | "keywords",
     value: string | string[],
   ) => {
-    const next = [...resume.skills];
+    const next = [...skills];
     next[i] = { ...next[i], [field]: value };
     onChange({ ...resume, skills: next });
   };
@@ -53,15 +69,16 @@ export default function ResumeForm({ resume, onChange }: Props) {
   const removeSkillGroup = (i: number) =>
     onChange({
       ...resume,
-      skills: resume.skills.filter((_, idx) => idx !== i),
+      skills: skills.filter((_, idx) => idx !== i),
     });
 
   // ── Work helpers ──
+  const work = resume.work ?? [];
   const addWork = () =>
     onChange({
       ...resume,
       work: [
-        ...resume.work,
+        ...work,
         {
           company: "",
           position: "",
@@ -75,33 +92,34 @@ export default function ResumeForm({ resume, onChange }: Props) {
 
   const updateWork = (
     i: number,
-    field: keyof ResumeData["work"][number],
+    field: keyof NonNullable<ResumeData["work"]>[number],
     value: string | string[],
   ) => {
-    const next = [...resume.work];
+    const next = [...work];
     next[i] = { ...next[i], [field]: value };
     onChange({ ...resume, work: next });
   };
 
   const removeWork = (i: number) =>
-    onChange({ ...resume, work: resume.work.filter((_, idx) => idx !== i) });
+    onChange({ ...resume, work: work.filter((_, idx) => idx !== i) });
 
   // ── Project helpers ──
+  const projects = resume.projects ?? [];
   const addProject = () =>
     onChange({
       ...resume,
       projects: [
-        ...resume.projects,
+        ...projects,
         { name: "", keywords: [], description: "", url: "" },
       ],
     });
 
   const updateProject = (
     i: number,
-    field: keyof ResumeData["projects"][number],
+    field: keyof NonNullable<ResumeData["projects"]>[number],
     value: string | string[],
   ) => {
-    const next = [...resume.projects];
+    const next = [...projects];
     next[i] = { ...next[i], [field]: value };
     onChange({ ...resume, projects: next });
   };
@@ -109,15 +127,16 @@ export default function ResumeForm({ resume, onChange }: Props) {
   const removeProject = (i: number) =>
     onChange({
       ...resume,
-      projects: resume.projects.filter((_, idx) => idx !== i),
+      projects: projects.filter((_, idx) => idx !== i),
     });
 
   // ── Education helpers ──
+  const education = resume.education ?? [];
   const addEducation = () =>
     onChange({
       ...resume,
       education: [
-        ...resume.education,
+        ...education,
         {
           institution: "",
           area: "",
@@ -131,10 +150,10 @@ export default function ResumeForm({ resume, onChange }: Props) {
 
   const updateEducation = (
     i: number,
-    field: keyof ResumeData["education"][number],
+    field: keyof NonNullable<ResumeData["education"]>[number],
     value: string,
   ) => {
-    const next = [...resume.education];
+    const next = [...education];
     next[i] = { ...next[i], [field]: value };
     onChange({ ...resume, education: next });
   };
@@ -142,7 +161,7 @@ export default function ResumeForm({ resume, onChange }: Props) {
   const removeEducation = (i: number) =>
     onChange({
       ...resume,
-      education: resume.education.filter((_, idx) => idx !== i),
+      education: education.filter((_, idx) => idx !== i),
     });
 
   return (
@@ -159,7 +178,7 @@ export default function ResumeForm({ resume, onChange }: Props) {
             <Label htmlFor="name">Full name</Label>
             <Input
               id="name"
-              value={resume.basics.name}
+              value={basics.name ?? ""}
               onChange={(e) => setBasics("name", e.target.value)}
               placeholder="Alex Johnson"
             />
@@ -169,7 +188,7 @@ export default function ResumeForm({ resume, onChange }: Props) {
             <Input
               id="email"
               type="email"
-              value={resume.basics.email}
+              value={basics.email ?? ""}
               onChange={(e) => setBasics("email", e.target.value)}
               placeholder="alex@example.com"
             />
@@ -178,7 +197,7 @@ export default function ResumeForm({ resume, onChange }: Props) {
             <Label htmlFor="website">Website</Label>
             <Input
               id="website"
-              value={resume.basics.website}
+              value={basics.website ?? ""}
               onChange={(e) => setBasics("website", e.target.value)}
               placeholder="example.com"
             />
@@ -187,7 +206,7 @@ export default function ResumeForm({ resume, onChange }: Props) {
             <Label htmlFor="linkedin">LinkedIn</Label>
             <Input
               id="linkedin"
-              value={resume.basics.linkedin}
+              value={basics.linkedin ?? ""}
               onChange={(e) => setBasics("linkedin", e.target.value)}
               placeholder="linkedin.com/in/username"
             />
@@ -196,7 +215,7 @@ export default function ResumeForm({ resume, onChange }: Props) {
             <Label htmlFor="location">Location</Label>
             <Input
               id="location"
-              value={resume.basics.location.address}
+              value={basics.location?.address ?? ""}
               onChange={(e) => setAddress(e.target.value)}
               placeholder="London"
             />
@@ -213,7 +232,7 @@ export default function ResumeForm({ resume, onChange }: Props) {
         </CardHeader>
         <CardContent>
           <Textarea
-            value={resume.basics.summaries[0] ?? ""}
+            value={basics.summaries?.[0] ?? ""}
             onChange={(e) => setSummary(e.target.value)}
             placeholder="A brief professional summary…"
             rows={4}
@@ -229,7 +248,7 @@ export default function ResumeForm({ resume, onChange }: Props) {
           </CardTitle>
         </CardHeader>
         <CardContent className="flex flex-col gap-4">
-          {resume.skills.map((group, i) => (
+          {skills.map((group, i) => (
             // biome-ignore lint/suspicious/noArrayIndexKey: controlled form list
             <div key={i} className="flex flex-col gap-3 rounded-md border p-3">
               <div className="flex items-center justify-between">
@@ -284,7 +303,7 @@ export default function ResumeForm({ resume, onChange }: Props) {
           </CardTitle>
         </CardHeader>
         <CardContent className="flex flex-col gap-4">
-          {resume.work.map((w, i) => (
+          {work.map((w, i) => (
             // biome-ignore lint/suspicious/noArrayIndexKey: controlled form list
             <div key={i} className="flex flex-col gap-3 rounded-md border p-3">
               <div className="flex items-center justify-between">
@@ -385,7 +404,7 @@ export default function ResumeForm({ resume, onChange }: Props) {
           </CardTitle>
         </CardHeader>
         <CardContent className="flex flex-col gap-4">
-          {resume.projects.map((p, i) => (
+          {projects.map((p, i) => (
             // biome-ignore lint/suspicious/noArrayIndexKey: controlled form list
             <div key={i} className="flex flex-col gap-3 rounded-md border p-3">
               <div className="flex items-center justify-between">
@@ -471,7 +490,7 @@ export default function ResumeForm({ resume, onChange }: Props) {
           </CardTitle>
         </CardHeader>
         <CardContent className="flex flex-col gap-4">
-          {resume.education.map((edu, i) => (
+          {education.map((edu, i) => (
             // biome-ignore lint/suspicious/noArrayIndexKey: controlled form list
             <div key={i} className="flex flex-col gap-3 rounded-md border p-3">
               <div className="flex items-center justify-between">
