@@ -11,12 +11,12 @@ import SkillsEditor from "@/components/editors/SkillsEditor";
 import TemplatesEditor from "@/components/editors/TemplatesEditor";
 import { Button } from "@/components/ui/button";
 import { type ResumeData, generatePDF } from "@/lib/api";
-import { APP_NAME } from "@/lib/config";
+import { APP_NAME, STORAGE_KEY } from "@/lib/config";
 import { FileDown, FileJson, Loader2 } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
-import { Suspense, useReducer, useState } from "react";
+import { Suspense, useEffect, useReducer, useState } from "react";
 
 const INITIAL_RESUME: ResumeData = {
   selectedTemplate: 1,
@@ -72,13 +72,24 @@ function sectionEditor(
 function EditorContent() {
   const searchParams = useSearchParams();
   const router = useRouter();
-  const [resume, dispatch] = useReducer(reducer, INITIAL_RESUME);
+  const [resume, dispatch] = useReducer(reducer, INITIAL_RESUME, () => {
+    try {
+      const saved = localStorage.getItem(STORAGE_KEY);
+      if (saved) return JSON.parse(saved) as ResumeData;
+    } catch {}
+    return INITIAL_RESUME;
+  });
   const [activeSection, setActiveSection] = useState<SectionId>("profile");
   const [loading, setLoading] = useState(false);
   const [pdfError, setPdfError] = useState<string | null>(null);
   const [importOpen, setImportOpen] = useState(
     searchParams.get("import") === "true",
   );
+
+  // Auto-save to localStorage on every change
+  useEffect(() => {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(resume));
+  }, [resume]);
 
   const update = (updated: ResumeData) =>
     dispatch({ type: "SET_RESUME", payload: updated });
@@ -169,7 +180,7 @@ function EditorContent() {
         </aside>
 
         {/* Col 3 — Live preview */}
-        <main className="flex-1 overflow-auto bg-muted p-6">
+        <main className="flex-1 overflow-y-auto overflow-x-hidden bg-muted p-6">
           <ResumePreview resume={resume} />
         </main>
       </div>
