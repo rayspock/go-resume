@@ -1,35 +1,50 @@
 # go-resume
 
-A monorepo resume builder — a Next.js frontend for editing resumes live, backed by a Go service that renders them to PDF via headless Chrome.
+A monorepo resume builder — a **Next.js 16** frontend for editing resumes live, backed by a **Go** service that renders them to PDF via headless Chrome.
 
 ## Repository layout
 
 ```
 go-resume/
-├── Makefile                       # Root task runner for both services
-├── pnpm-workspace.yaml            # pnpm monorepo definition
+├── Makefile                           # Root task runner (api-* and web-* targets)
+├── pnpm-workspace.yaml                # pnpm monorepo definition
+├── .agents/skills/                    # Go coding skills (from samber/cc-skills-golang)
 ├── apps/
-│   └── web/                       # Next.js frontend (App Router)
+│   └── web/                           # Next.js frontend (App Router)
 │       ├── app/
-│       │   ├── page.tsx           # Landing page (server component)
-│       │   └── editor/page.tsx    # Resume editor (client component)
-│       ├── components/            # ResumeForm, ResumePreview, …
-│       └── lib/api.ts             # PDF generation API client
+│       │   ├── page.tsx               # Landing page (server component)
+│       │   ├── editor/page.tsx        # Resume editor (client component)
+│       │   ├── icon.png               # Browser tab icon (32×32)
+│       │   ├── apple-icon.png         # Apple touch icon (180×180)
+│       │   └── favicon.ico            # Favicon (48×48)
+│       ├── components/
+│       │   ├── editors/               # Section editors (Profile, Skills, Experience, …)
+│       │   ├── SectionNav.tsx         # Left sidebar section navigation
+│       │   ├── ResumePreview.tsx      # Live iframe preview
+│       │   ├── ImportJsonDialog.tsx    # JSON import dialog
+│       │   ├── SkillListInput.tsx     # Tag-style skill keyword input
+│       │   └── ui/                    # shadcn/ui primitives
+│       ├── lib/
+│       │   ├── api.ts                 # PDF + preview API client
+│       │   └── config.ts              # App name and constants
+│       └── biome.json                 # Biome linter/formatter config
 └── services/
-    └── api/                       # Go HTTP service
-        ├── main.go                # Server bootstrap, logging middleware
-        ├── model/resume.go        # Domain types (Resume, Basics, Work, …)
-        ├── renderer/              # html/template engine + templates
-        ├── pdf/generator.go       # chromedp → headless Chrome → PDF bytes
-        └── handler/resume.go      # HTTP handler, request parsing
+    └── api/                           # Go HTTP service
+        ├── main.go                    # Server bootstrap, logging middleware
+        ├── model/resume.go            # Domain types – source of truth for JSON shape
+        ├── renderer/
+        │   ├── renderer.go            # Parses & executes html/template files
+        │   └── templates/classic.html # A4-styled resume template (CSS embedded)
+        ├── pdf/generator.go           # chromedp → headless Chrome → PDF bytes
+        └── handler/resume.go          # HTTP handler for POST /resume/pdf
 ```
 
 ## Prerequisites
 
-* Go 1.22+
-* Google Chrome (or Chromium) installed and on your `PATH`
-* Node.js 18+ and [pnpm](https://pnpm.io)
-* `make`
+- Go 1.24+
+- Google Chrome (or Chromium) installed and on your `PATH`
+- Node.js 20+ and [pnpm](https://pnpm.io)
+- `make`
 
 ## Getting started
 
@@ -39,44 +54,55 @@ Install frontend dependencies (one-time):
 pnpm install
 ```
 
-## Root Makefile targets
-
-```
-  dev            Start both API and web dev servers in parallel
-  api-run        Run the Go API (PORT defaults to 8080)
-  api-build      Build the Go API binary
-  api-test       Run Go tests with race detector
-  api-lint       Lint the Go API via golangci-lint
-  web-dev        Start the Next.js dev server
-  web-build      Build the Next.js app for production
-  web-lint       Lint the Next.js app
-  web-lint-fix   Lint and auto-fix fixable issues in the Next.js app
-  help           Show this help message
-```
-
-Run `make help` to see the same list at any time.
-
-## Running locally
+Start both services:
 
 ```bash
-make dev               # start API (:8080) + web (:3000) in parallel
-make api-run           # Go API only
-make web-dev           # Next.js only
-PORT=9090 make api-run # custom port
+make dev   # API on :8080, web on :3000
 ```
 
 Open [http://localhost:3000](http://localhost:3000) to use the editor.
+
+## Makefile targets
+
+| Target | Purpose |
+|---|---|
+| `make dev` | Start API (:8080) + web (:3000) in parallel |
+| `make lint` | Lint both API and web |
+| `make lint-fix` | Fix lint issues in both API and web |
+| `make api-run` | Run Go API only |
+| `make api-build` | Compile Go binary |
+| `make api-test` | Run Go tests with race detector |
+| `make api-lint` | Lint Go code (vet + fmt check) |
+| `make api-lint-fix` | Auto-format Go source files |
+| `make web-dev` | Start Next.js dev server |
+| `make web-build` | Build Next.js for production |
+| `make web-lint` | Lint frontend via Biome |
+| `make web-lint-fix` | Fix linting issues via Biome |
+
+Run `make help` to see the same list at any time.
 
 ## API
 
 ### `POST /resume/pdf`
 
-**Request body** – `application/json`:
+Returns a PDF file (`application/pdf`).
+
+### `POST /resume/html`
+
+Returns rendered HTML (`text/html`) for live preview.
+
+**Request body** (both endpoints) – `application/json`:
 
 ```json
 {
   "selectedTemplate": 1,
-  "headings": { "work": "Experience" },
+  "headings": {
+    "summary": "Summary",
+    "skills": "Skills",
+    "work": "Experience",
+    "projects": "Projects",
+    "education": "Education"
+  },
   "basics": {
     "name": "Alex Johnson",
     "email": "alex@example.com",
@@ -111,14 +137,15 @@ Open [http://localhost:3000](http://localhost:3000) to use the editor.
       "area": "Computer Science",
       "studyType": "BSc",
       "startDate": "2012",
-      "endDate": "2016"
+      "endDate": "2016",
+      "gpa": "3.8 / 4.0 GPA"
     }
   ],
   "sections": ["templates", "profile", "skills", "work", "projects", "education"]
 }
 ```
 
-**Response** – `application/pdf` with `Content-Disposition: attachment; filename="resume.pdf"`.
+The `headings` map is optional — any omitted key falls back to its default label (Summary, Skills, Experience, Projects, Education).
 
 ### Quick test with curl
 
@@ -131,15 +158,14 @@ curl -X POST http://localhost:8080/resume/pdf \
 
 > **Local-only files** — any file matching `*.local.json` or `*.pdf` is git-ignored.
 > The `output/` directory is tracked via a `.gitkeep` placeholder so it exists after a fresh clone.
-> Copy the JSON payload above into `<name>.local.json` to experiment without
-> accidentally committing test data or generated PDFs.
 
 ## Extending
 
 | Goal | Where to change |
 |---|---|
 | Add a new template | Drop a `*.html` file in `renderer/templates/` and map its ID in `handler/resume.go:templateForID` |
-| Add new resume fields | Extend structs in `model/resume.go`, reference them in the template |
+| Add new resume fields | Extend structs in `model/resume.go`, reference them in the template, mirror in `lib/api.ts` |
+| Add a section heading | Add a key to the `headings` map and use `{{ heading $ "key" "Default" }}` in the template |
 | Swap PDF backend | Implement the `handler.PDFGenerator` interface |
 | Add a new page | Create `apps/web/app/<route>/page.tsx` |
 | Add database / persistence | Wire a repository layer in `main.go` and inject into handlers |
