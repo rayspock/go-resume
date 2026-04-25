@@ -60,3 +60,14 @@ coverage/
 # Certificates
 *.pem
 
+# Agent skills — only .agents/ is committed.
+# Ignore per-tool symlink dirs that some AI tools may create.
+/skills/
+skills-lock.json
+.claude/
+.copilot/
+.cursor/
+.windsurf/
+.kiro/
+.junie/
+

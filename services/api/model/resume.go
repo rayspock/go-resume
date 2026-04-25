@@ -54,4 +54,5 @@ type Education struct {
 	StudyType   string `json:"studyType"`
 	StartDate   string `json:"startDate"`
 	EndDate     string `json:"endDate"`
+	GPA         string `json:"gpa"`
 }

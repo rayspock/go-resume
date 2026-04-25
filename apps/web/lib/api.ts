@@ -12,8 +12,8 @@ export interface ResumeData {
     location: { address: string };
     summaries: string[];
   };
-  skills: Array<{ name: string; keywords: string[]; level?: string }>;
-  work: Array<{
+  skills?: Array<{ name: string; keywords: string[]; level?: string }>;
+  work?: Array<{
     company: string;
     position: string;
     location: string;
@@ -21,18 +21,19 @@ export interface ResumeData {
     endDate: string;
     highlights: string[];
   }>;
-  projects: Array<{
+  projects?: Array<{
     name: string;
     keywords: string[];
     description: string;
     url: string;
   }>;
-  education: Array<{
+  education?: Array<{
     institution: string;
     area: string;
     studyType: string;
     startDate: string;
     endDate: string;
+    gpa: string;
   }>;
   sections: string[];
 }

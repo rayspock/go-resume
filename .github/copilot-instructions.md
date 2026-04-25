@@ -13,6 +13,7 @@ triggers PDF generation via the API.
 go-resume/
 ├── Makefile                           # Root task runner (api-* and web-* targets)
 ├── pnpm-workspace.yaml                # pnpm monorepo definition
+├── .agents/skills/                    # Go coding skills (from samber/cc-skills-golang)
 ├── apps/
 │   └── web/                           # Next.js frontend (App Router)
 │       ├── app/
@@ -30,6 +31,22 @@ go-resume/
         │   └── templates/classic.html # A4-styled resume template (CSS embedded)
         ├── pdf/generator.go           # chromedp integration; one Chrome context per request
         └── handler/resume.go          # HTTP handler for POST /resume/pdf
+```
+
+## Agent skills
+
+Go coding skills from [`samber/cc-skills-golang`](https://github.com/samber/cc-skills-golang)
+are installed in `.agents/skills/`. They provide domain-specific guidance for
+error handling, testing, naming, concurrency, security, and more. Skills are
+loaded on demand when a task matches their description.
+
+To update skills:
+
+```bash
+git clone --depth 1 https://github.com/samber/cc-skills-golang.git /tmp/cc-skills-golang
+rm -rf .agents/skills/golang-*
+cp -r /tmp/cc-skills-golang/skills/* .agents/skills/
+rm -rf /tmp/cc-skills-golang
 ```
 
 ## Coding conventions
@@ -77,6 +94,8 @@ go-resume/
 1. Add the field to the appropriate struct in `model/resume.go`.
 2. Reference it in the relevant template(s).
 3. Update `ResumeData` in `apps/web/lib/api.ts` to mirror the new shape.
+4. Update the form component in `apps/web/components/ResumeForm.tsx` if the field
+   is user-editable.
 
 ### Adding a new endpoint
 
@@ -96,11 +115,12 @@ go-resume/
 
 | Target | Purpose |
 |---|---|
+| `make lint` | Lint both API and web |
 | `make dev` | Start API (:8080) + web (:3000) in parallel |
 | `make api-run` | Run Go API only |
 | `make api-build` | Compile Go binary |
 | `make api-test` | Run Go tests with race detector |
-| `make api-lint` | Lint Go code via golangci-lint |
+| `make api-lint` | Lint Go code (vet + fmt check) |
 | `make web-dev` | Start Next.js dev server |
 | `make web-build` | Build Next.js for production |
 | `make web-lint` | Lint frontend via Biome |
@@ -114,7 +134,7 @@ go-resume/
 | `make test` | Run tests with race detector |
 | `make fmt` | Format source with `gofmt` |
 | `make vet` | Static analysis via `go vet` |
-| `make lint` | Full lint via `golangci-lint` |
+| `make lint` | Lint via `go vet` + format check |
 | `make tidy` | Tidy and verify modules |
 | `make clean` | Remove `./bin/` |
 
