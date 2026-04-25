@@ -33,10 +33,27 @@ export default function ResumeForm({ resume, onChange }: Props) {
       basics: { ...resume.basics, summaries: [value] },
     });
 
-  const setSkills = (keywords: string[]) =>
+  // ── Skills helpers ──
+  const addSkillGroup = () =>
     onChange({
       ...resume,
-      skills: [{ name: "Skills", keywords }],
+      skills: [...resume.skills, { name: "", keywords: [] }],
+    });
+
+  const updateSkillGroup = (
+    i: number,
+    field: "name" | "keywords",
+    value: string | string[],
+  ) => {
+    const next = [...resume.skills];
+    next[i] = { ...next[i], [field]: value };
+    onChange({ ...resume, skills: next });
+  };
+
+  const removeSkillGroup = (i: number) =>
+    onChange({
+      ...resume,
+      skills: resume.skills.filter((_, idx) => idx !== i),
     });
 
   // ── Work helpers ──
@@ -128,8 +145,6 @@ export default function ResumeForm({ resume, onChange }: Props) {
       education: resume.education.filter((_, idx) => idx !== i),
     });
 
-  const keywords = resume.skills[0]?.keywords ?? [];
-
   return (
     <div className="flex flex-col gap-4">
       {/* ── Personal Info ── */}
@@ -213,8 +228,51 @@ export default function ResumeForm({ resume, onChange }: Props) {
             Skills
           </CardTitle>
         </CardHeader>
-        <CardContent>
-          <SkillListInput skills={keywords} onChange={setSkills} />
+        <CardContent className="flex flex-col gap-4">
+          {resume.skills.map((group, i) => (
+            // biome-ignore lint/suspicious/noArrayIndexKey: controlled form list
+            <div key={i} className="flex flex-col gap-3 rounded-md border p-3">
+              <div className="flex items-center justify-between">
+                <span className="text-sm font-medium">
+                  {group.name || `Group ${i + 1}`}
+                </span>
+                <Button
+                  type="button"
+                  variant="ghost"
+                  size="icon"
+                  onClick={() => removeSkillGroup(i)}
+                  aria-label="Remove skill group"
+                >
+                  <Trash2 className="h-4 w-4" />
+                </Button>
+              </div>
+              <div className="flex flex-col gap-1.5">
+                <Label>Category</Label>
+                <Input
+                  value={group.name}
+                  onChange={(e) => updateSkillGroup(i, "name", e.target.value)}
+                  placeholder="Languages, Frameworks, Tools…"
+                />
+              </div>
+              <div className="flex flex-col gap-1.5">
+                <Label>Keywords</Label>
+                <SkillListInput
+                  skills={group.keywords}
+                  onChange={(kw) => updateSkillGroup(i, "keywords", kw)}
+                />
+              </div>
+            </div>
+          ))}
+          <Button
+            type="button"
+            variant="outline"
+            size="sm"
+            onClick={addSkillGroup}
+            className="w-fit gap-1"
+          >
+            <Plus className="h-4 w-4" />
+            Add skill group
+          </Button>
         </CardContent>
       </Card>
 

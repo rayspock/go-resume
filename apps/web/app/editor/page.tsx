@@ -23,7 +23,7 @@ const INITIAL_RESUME: ResumeData = {
     location: { address: "" },
     summaries: [""],
   },
-  skills: [{ name: "Skills", keywords: [] }],
+  skills: [{ name: "", keywords: [] }],
   work: [],
   projects: [],
   education: [],
