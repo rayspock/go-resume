@@ -2,16 +2,21 @@ import { buttonVariants } from "@/components/ui/button";
 import { APP_NAME } from "@/lib/config";
 import { cn } from "@/lib/utils";
 import { Download, FileText, Upload, Zap } from "lucide-react";
+import Image from "next/image";
 import Link from "next/link";
 
 export default function LandingPage() {
   return (
     <div className="flex flex-1 flex-col items-center justify-center bg-background px-6 py-24">
       <div className="flex max-w-2xl flex-col items-center gap-8 text-center">
-        {/* Icon */}
-        <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-blue-600 text-white shadow-lg">
-          <FileText className="h-8 w-8" />
-        </div>
+        {/* Logo */}
+        <Image
+          src="/go-resume-logo.png"
+          alt="Go Resume logo"
+          width={128}
+          height={128}
+          priority
+        />
 
         {/* Headline */}
         <div className="flex flex-col gap-3">

@@ -19,7 +19,6 @@ export default function ResumeForm({ resume, onChange }: Props) {
     name: "",
     email: "",
     website: "",
-    linkedin: "",
     location: { address: "" },
     summaries: [""],
   };
@@ -200,15 +199,6 @@ export default function ResumeForm({ resume, onChange }: Props) {
               value={basics.website ?? ""}
               onChange={(e) => setBasics("website", e.target.value)}
               placeholder="example.com"
-            />
-          </div>
-          <div className="flex flex-col gap-1.5">
-            <Label htmlFor="linkedin">LinkedIn</Label>
-            <Input
-              id="linkedin"
-              value={basics.linkedin ?? ""}
-              onChange={(e) => setBasics("linkedin", e.target.value)}
-              placeholder="linkedin.com/in/username"
             />
           </div>
           <div className="flex flex-col gap-1.5">

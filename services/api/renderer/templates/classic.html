@@ -219,7 +219,6 @@
       {{- $sep := false -}}
       {{ if .Basics.Email }}{{ if $sep }}<span class="sep">|</span>{{ end }}<a href="mailto:{{ .Basics.Email }}">{{ .Basics.Email }}</a>{{ $sep = true }}{{ end }}
       {{ if .Basics.Location.Address }}{{ if $sep }}<span class="sep">|</span>{{ end }}{{ .Basics.Location.Address }}{{ $sep = true }}{{ end }}
-      {{ if .Basics.LinkedIn }}{{ if $sep }}<span class="sep">|</span>{{ end }}<a href="https://{{ .Basics.LinkedIn }}">{{ .Basics.LinkedIn }}</a>{{ $sep = true }}{{ end }}
       {{ if .Basics.Website }}{{ if $sep }}<span class="sep">|</span>{{ end }}<a href="https://{{ .Basics.Website }}">{{ .Basics.Website }}</a>{{ $sep = true }}{{ end }}
     </div>
   </div>

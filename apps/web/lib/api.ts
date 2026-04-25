@@ -9,7 +9,6 @@ export interface ResumeData {
     name: string;
     email: string;
     website: string;
-    linkedin: string;
     location: { address: string };
     summaries: string[];
   };

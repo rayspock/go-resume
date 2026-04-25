@@ -8,6 +8,7 @@ import { Button } from "@/components/ui/button";
 import { type ResumeData, generatePDF } from "@/lib/api";
 import { APP_NAME } from "@/lib/config";
 import { FileDown, FileJson, Loader2 } from "lucide-react";
+import Image from "next/image";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { Suspense, useReducer, useState } from "react";
@@ -19,7 +20,6 @@ const INITIAL_RESUME: ResumeData = {
     name: "",
     email: "",
     website: "",
-    linkedin: "",
     location: { address: "" },
     summaries: [""],
   },
@@ -96,8 +96,14 @@ function EditorContent() {
       <header className="flex items-center justify-between border-b bg-card px-6 py-3 shadow-sm">
         <Link
           href="/"
-          className="text-lg font-semibold tracking-tight hover:text-blue-500 transition-colors"
+          className="flex items-center gap-2 text-lg font-semibold tracking-tight hover:text-blue-500 transition-colors"
         >
+          <Image
+            src="/go-resume-logo.png"
+            alt="Go Resume logo"
+            width={28}
+            height={28}
+          />
           {APP_NAME}
         </Link>
         <div className="flex items-center gap-3">
