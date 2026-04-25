@@ -53,17 +53,22 @@ export default function ResumePreview({ resume: data }: Props) {
   // isolated from Tailwind preflight and the surrounding app styles.
   // A4: 210 mm ≈ 794 px wide, 297 mm ≈ 1123 px tall.
   return (
-    <div className="overflow-auto rounded-lg border bg-white shadow-sm">
-      <iframe
-        title="Resume Preview"
-        srcDoc={html}
-        style={{
-          width: 794,
-          minHeight: 1123,
-          border: "none",
-          display: "block",
-        }}
-      />
+    <div className="flex justify-center">
+      <div
+        className="rounded-sm bg-white shadow-[0_2px_8px_rgba(0,0,0,0.15),0_0_0_1px_rgba(0,0,0,0.05)]"
+        style={{ width: 794 }}
+      >
+        <iframe
+          title="Resume Preview"
+          srcDoc={html}
+          style={{
+            width: 794,
+            minHeight: 1123,
+            border: "none",
+            display: "block",
+          }}
+        />
+      </div>
     </div>
   );
 }

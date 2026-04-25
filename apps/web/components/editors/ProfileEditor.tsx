@@ -92,11 +92,14 @@ export default function ProfileEditor({ resume, onChange }: Props) {
           defaultLabel="Summary"
         />
         <Textarea
-          value={basics.summaries[0] ?? ""}
+          value={basics.summaries.join("\n")}
           onChange={(e) =>
             onChange({
               ...resume,
-              basics: { ...basics, summaries: [e.target.value] },
+              basics: {
+                ...basics,
+                summaries: e.target.value.split("\n").filter((l) => l.trim()),
+              },
             })
           }
           placeholder="A brief professional summary…"
