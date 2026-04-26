@@ -29,6 +29,7 @@ export interface ResumeData {
   }>;
   education?: Array<{
     institution: string;
+    location: string;
     area: string;
     studyType: string;
     startDate: string;

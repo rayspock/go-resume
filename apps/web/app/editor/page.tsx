@@ -209,7 +209,7 @@ function EditorContent() {
         {/* Col 1 — Section nav */}
         <SectionNav
           active={activeSection}
-          sections={filterSectionIds(resume.sections)}
+          sections={resume.sections as SectionId[]}
           onChange={setActiveSection}
           onReorder={(sections: SectionId[]) => update({ ...resume, sections })}
         />

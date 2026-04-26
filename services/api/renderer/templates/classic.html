@@ -304,7 +304,7 @@
             <span class="dates">{{ .StartDate }}{{ if .EndDate }} - {{ .EndDate }}{{ end }}</span>
           </div>
           <div class="edu-meta">
-            {{ .Institution }}{{ if .GPA }} {{ .GPA }}{{ end }}
+            {{ .Institution }}{{ if .Location }}, {{ .Location }}{{ end }}{{ if .GPA }} {{ .GPA }}{{ end }}
           </div>
         </div>
         {{ end }}

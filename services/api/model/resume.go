@@ -51,6 +51,7 @@ type Project struct {
 
 type Education struct {
 	Institution string `json:"institution"`
+	Location    string `json:"location"`
 	Area        string `json:"area"`
 	StudyType   string `json:"studyType"`
 	StartDate   string `json:"startDate"`
