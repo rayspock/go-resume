@@ -7,7 +7,7 @@ PORT      ?= 8080
 GOFLAGS   := -trimpath
 LDFLAGS   := -s -w
 
-.PHONY: all build run test lint fmt vet tidy clean help
+.PHONY: all build run test lint fmt vet tidy clean thumbs help
 
 all: build ## Default: build the binary
 
@@ -40,7 +40,10 @@ tidy: ## Tidy and verify go.mod / go.sum
 	go mod tidy
 	go mod verify
 
-## ── Maintenance ───────────────────────────────────────────────────────────
+## ── Maintenance ───────────────────────────────────────────────────────
+thumbs: ## Regenerate template thumbnail PNGs for the frontend
+	go run ./cmd/thumbgen
+
 clean: ## Remove build artefacts
 	rm -rf $(BUILD_DIR)
 
