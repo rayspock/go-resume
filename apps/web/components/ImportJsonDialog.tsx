@@ -10,7 +10,7 @@ import {
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import type { ResumeData } from "@/lib/api";
+import { type ResumeData, isResumeData } from "@/lib/api";
 import { Upload } from "lucide-react";
 import { useRef, useState } from "react";
 
@@ -18,17 +18,6 @@ interface Props {
   open: boolean;
   onOpenChange: (open: boolean) => void;
   onImport: (data: ResumeData) => void;
-}
-
-function validateShape(data: unknown): data is ResumeData {
-  if (typeof data !== "object" || data === null) return false;
-  const obj = data as Record<string, unknown>;
-  return (
-    typeof obj.basics === "object" &&
-    obj.basics !== null &&
-    typeof (obj.basics as Record<string, unknown>).name === "string" &&
-    Array.isArray(obj.sections)
-  );
 }
 
 export default function ImportJsonDialog({
@@ -48,7 +37,7 @@ export default function ImportJsonDialog({
     reader.onload = () => {
       try {
         const parsed: unknown = JSON.parse(reader.result as string);
-        if (!validateShape(parsed)) {
+        if (!isResumeData(parsed)) {
           setError(
             "Invalid resume format. JSON must contain basics.name and sections array.",
           );

@@ -86,6 +86,11 @@ rm -rf /tmp/cc-skills-golang
 - **No `dangerouslySetInnerHTML`**: when embedding server-generated HTML (e.g.
   resume preview), use an `<iframe srcDoc={html}>` so the template's styles are
   fully isolated from Tailwind preflight and the surrounding app.
+- **No `as` type assertions on untrusted data**: never cast `JSON.parse()` output
+  with `as SomeType`. Use the `isResumeData()` type guard from `lib/api.ts` to
+  validate the shape at runtime. This applies to `localStorage`, file imports,
+  and any other external JSON source. Prefer a hand-written type guard for simple
+  shapes; introduce Zod only if the schema grows significantly complex.
 - **Component split**: keep server components (landing page) and client components
   (`"use client"` — editor, form, preview) clearly separated.
 - **Single state source**: the editor page owns the resume state via `useReducer`;

@@ -2,7 +2,10 @@
 
 import ImportJsonDialog from "@/components/ImportJsonDialog";
 import ResumePreview from "@/components/ResumePreview";
-import SectionNav, { type SectionId } from "@/components/SectionNav";
+import SectionNav, {
+  type SectionId,
+  filterSectionIds,
+} from "@/components/SectionNav";
 import AwardsEditor from "@/components/editors/AwardsEditor";
 import EducationEditor from "@/components/editors/EducationEditor";
 import ExperienceEditor from "@/components/editors/ExperienceEditor";
@@ -11,7 +14,7 @@ import ProjectsEditor from "@/components/editors/ProjectsEditor";
 import SkillsEditor from "@/components/editors/SkillsEditor";
 import TemplatesEditor from "@/components/editors/TemplatesEditor";
 import { Button } from "@/components/ui/button";
-import { type ResumeData, generatePDF } from "@/lib/api";
+import { type ResumeData, generatePDF, isResumeData } from "@/lib/api";
 import { APP_NAME, STORAGE_KEY } from "@/lib/config";
 import { FileDown, FileJson, Loader2 } from "lucide-react";
 import Image from "next/image";
@@ -103,10 +106,10 @@ function EditorContent() {
       try {
         const saved = localStorage.getItem(STORAGE_KEY);
         if (saved) {
-          dispatch({
-            type: "SET_RESUME",
-            payload: JSON.parse(saved) as ResumeData,
-          });
+          const parsed: unknown = JSON.parse(saved);
+          if (isResumeData(parsed)) {
+            dispatch({ type: "SET_RESUME", payload: parsed });
+          }
         }
       } catch {}
     }
@@ -206,7 +209,7 @@ function EditorContent() {
         {/* Col 1 — Section nav */}
         <SectionNav
           active={activeSection}
-          sections={resume.sections as SectionId[]}
+          sections={filterSectionIds(resume.sections)}
           onChange={setActiveSection}
           onReorder={(sections: SectionId[]) => update({ ...resume, sections })}
         />

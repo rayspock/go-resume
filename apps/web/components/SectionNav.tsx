@@ -27,15 +27,26 @@ import {
   Trophy,
   User,
 } from "lucide-react";
+import { useEffect, useState } from "react";
 
-export type SectionId =
-  | "templates"
-  | "profile"
-  | "skills"
-  | "work"
-  | "projects"
-  | "education"
-  | "awards";
+const SECTION_IDS = [
+  "templates",
+  "profile",
+  "skills",
+  "work",
+  "projects",
+  "education",
+  "awards",
+] as const;
+
+export type SectionId = (typeof SECTION_IDS)[number];
+
+const SECTION_ID_SET = new Set<string>(SECTION_IDS);
+
+/** Filter an untrusted string[] to only valid SectionIds. */
+export function filterSectionIds(ids: string[]): SectionId[] {
+  return ids.filter((id): id is SectionId => SECTION_ID_SET.has(id));
+}
 
 export const SECTION_META: Record<
   SectionId,
@@ -132,6 +143,9 @@ export default function SectionNav({
   onChange,
   onReorder,
 }: Props) {
+  const [mounted, setMounted] = useState(false);
+  useEffect(() => setMounted(true), []);
+
   const sensors = useSensors(
     useSensor(PointerSensor, { activationConstraint: { distance: 5 } }),
     useSensor(KeyboardSensor, {
@@ -143,17 +157,57 @@ export default function SectionNav({
     const { active: dragged, over } = event;
     if (!over || dragged.id === over.id) return;
 
-    const oldIndex = sections.indexOf(dragged.id as SectionId);
-    const newIndex = sections.indexOf(over.id as SectionId);
+    const draggedId = String(dragged.id);
+    const overId = String(over.id);
+    if (!SECTION_ID_SET.has(draggedId) || !SECTION_ID_SET.has(overId)) return;
+
+    const oldIndex = sections.indexOf(draggedId as SectionId);
+    const newIndex = sections.indexOf(overId as SectionId);
 
     // Don't allow dropping into fixed positions
     if (FIXED_SECTIONS.includes(sections[newIndex])) return;
 
     const next = [...sections];
     next.splice(oldIndex, 1);
-    next.splice(newIndex, 0, dragged.id as SectionId);
+    next.splice(newIndex, 0, draggedId as SectionId);
     onReorder(next);
   };
+
+  // Render static buttons during SSR / before mount to avoid hydration mismatch
+  // (dnd-kit injects aria/data attributes that differ between server and client)
+  if (!mounted) {
+    return (
+      <nav className="flex w-[72px] shrink-0 flex-col items-center gap-1 border-r bg-card py-3">
+        {sections.map((id) => {
+          const meta = SECTION_META[id];
+          if (!meta) return null;
+          const { label, Icon } = meta;
+          return (
+            <div
+              key={id}
+              className="group relative flex w-full flex-col items-center"
+            >
+              <button
+                type="button"
+                onClick={() => onChange(id)}
+                className={cn(
+                  "flex w-full flex-col items-center gap-1 rounded-lg px-1 py-3 text-center transition-colors",
+                  active === id
+                    ? "bg-blue-50 text-blue-600"
+                    : "text-muted-foreground hover:bg-muted hover:text-foreground",
+                )}
+              >
+                <Icon className="h-5 w-5" />
+                <span className="text-[10px] font-medium leading-tight">
+                  {label}
+                </span>
+              </button>
+            </div>
+          );
+        })}
+      </nav>
+    );
+  }
 
   return (
     <nav className="flex w-[72px] shrink-0 flex-col items-center gap-1 border-r bg-card py-3">
