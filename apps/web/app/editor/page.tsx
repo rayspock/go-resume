@@ -72,7 +72,12 @@ function sectionEditor(
 function EditorContent() {
   const searchParams = useSearchParams();
   const router = useRouter();
+  const isNew = searchParams.get("new") === "true";
   const [resume, dispatch] = useReducer(reducer, INITIAL_RESUME, () => {
+    if (isNew) {
+      localStorage.removeItem(STORAGE_KEY);
+      return INITIAL_RESUME;
+    }
     try {
       const saved = localStorage.getItem(STORAGE_KEY);
       if (saved) return JSON.parse(saved) as ResumeData;
@@ -85,6 +90,11 @@ function EditorContent() {
   const [importOpen, setImportOpen] = useState(
     searchParams.get("import") === "true",
   );
+
+  // Strip ?new from URL after clearing so a refresh doesn't keep resetting
+  useEffect(() => {
+    if (isNew) router.replace("/editor");
+  }, [isNew, router]);
 
   // Auto-save to localStorage on every change
   useEffect(() => {

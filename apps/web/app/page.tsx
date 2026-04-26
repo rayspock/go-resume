@@ -36,7 +36,7 @@ export default function LandingPage() {
         <div className="flex flex-wrap items-center justify-center gap-4">
           <ContinueEditing />
           <Link
-            href="/editor"
+            href="/editor?new=true"
             className={cn(
               buttonVariants({ size: "lg" }),
               "gap-2 px-8 text-base",
