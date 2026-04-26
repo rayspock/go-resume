@@ -172,7 +172,12 @@ function EditorContent() {
       {/* ── Three-column body ────────────────────────────────── */}
       <div className="flex flex-1 overflow-hidden">
         {/* Col 1 — Section nav */}
-        <SectionNav active={activeSection} onChange={setActiveSection} />
+        <SectionNav
+          active={activeSection}
+          sections={resume.sections as SectionId[]}
+          onChange={setActiveSection}
+          onReorder={(sections: SectionId[]) => update({ ...resume, sections })}
+        />
 
         {/* Col 2 — Section editor */}
         <aside className="w-96 shrink-0 overflow-y-auto border-r bg-background p-5">
