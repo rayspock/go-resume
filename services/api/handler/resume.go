@@ -87,7 +87,7 @@ var Templates = []TemplateInfo{
 }
 
 // TemplateForID maps a selectedTemplate integer to a template filename.
-// Unknown IDs fall back to the classic template.
+// Unknown or legacy IDs (e.g. 10 from older JSON exports) fall back to "classic.html".
 func TemplateForID(id int) string {
 	for _, t := range Templates {
 		if t.ID == id {
