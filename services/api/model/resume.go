@@ -11,6 +11,7 @@ type Resume struct {
 	Work             []Work            `json:"work"`
 	Projects         []Project         `json:"projects"`
 	Education        []Education       `json:"education"`
+	Awards           []Award           `json:"awards"`
 	Sections         []string          `json:"sections"`
 }
 
@@ -50,9 +51,17 @@ type Project struct {
 
 type Education struct {
 	Institution string `json:"institution"`
+	Location    string `json:"location"`
 	Area        string `json:"area"`
 	StudyType   string `json:"studyType"`
 	StartDate   string `json:"startDate"`
 	EndDate     string `json:"endDate"`
 	GPA         string `json:"gpa"`
+}
+
+type Award struct {
+	Title   string `json:"title"`
+	Date    string `json:"date"`
+	Summary string `json:"summary"`
+	Awarder string `json:"awarder"`
 }

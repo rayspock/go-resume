@@ -2,7 +2,11 @@
 
 import ImportJsonDialog from "@/components/ImportJsonDialog";
 import ResumePreview from "@/components/ResumePreview";
-import SectionNav, { type SectionId } from "@/components/SectionNav";
+import SectionNav, {
+  type SectionId,
+  filterSectionIds,
+} from "@/components/SectionNav";
+import AwardsEditor from "@/components/editors/AwardsEditor";
 import EducationEditor from "@/components/editors/EducationEditor";
 import ExperienceEditor from "@/components/editors/ExperienceEditor";
 import ProfileEditor from "@/components/editors/ProfileEditor";
@@ -10,7 +14,7 @@ import ProjectsEditor from "@/components/editors/ProjectsEditor";
 import SkillsEditor from "@/components/editors/SkillsEditor";
 import TemplatesEditor from "@/components/editors/TemplatesEditor";
 import { Button } from "@/components/ui/button";
-import { type ResumeData, generatePDF } from "@/lib/api";
+import { type ResumeData, generatePDF, isResumeData } from "@/lib/api";
 import { APP_NAME, STORAGE_KEY } from "@/lib/config";
 import { FileDown, FileJson, Loader2 } from "lucide-react";
 import Image from "next/image";
@@ -26,6 +30,7 @@ const INITIAL_RESUME: ResumeData = {
     work: "Experience",
     projects: "Projects",
     education: "Education",
+    awards: "Awards",
   },
   basics: {
     name: "",
@@ -38,7 +43,16 @@ const INITIAL_RESUME: ResumeData = {
   work: [],
   projects: [],
   education: [],
-  sections: ["templates", "profile", "skills", "work", "projects", "education"],
+  awards: [],
+  sections: [
+    "templates",
+    "profile",
+    "skills",
+    "work",
+    "projects",
+    "education",
+    "awards",
+  ],
 };
 
 type Action = { type: "SET_RESUME"; payload: ResumeData };
@@ -66,19 +80,17 @@ function sectionEditor(
       return <ProjectsEditor {...props} />;
     case "education":
       return <EducationEditor {...props} />;
+    case "awards":
+      return <AwardsEditor {...props} />;
   }
 }
 
 function EditorContent() {
   const searchParams = useSearchParams();
   const router = useRouter();
-  const [resume, dispatch] = useReducer(reducer, INITIAL_RESUME, () => {
-    try {
-      const saved = localStorage.getItem(STORAGE_KEY);
-      if (saved) return JSON.parse(saved) as ResumeData;
-    } catch {}
-    return INITIAL_RESUME;
-  });
+  const isNew = searchParams.get("new") === "true";
+  const [resume, dispatch] = useReducer(reducer, INITIAL_RESUME);
+  const [hydrated, setHydrated] = useState(false);
   const [activeSection, setActiveSection] = useState<SectionId>("profile");
   const [loading, setLoading] = useState(false);
   const [pdfError, setPdfError] = useState<string | null>(null);
@@ -86,10 +98,33 @@ function EditorContent() {
     searchParams.get("import") === "true",
   );
 
-  // Auto-save to localStorage on every change
+  // Hydrate from localStorage after mount (avoids SSR mismatch)
   useEffect(() => {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(resume));
-  }, [resume]);
+    if (isNew) {
+      localStorage.removeItem(STORAGE_KEY);
+    } else {
+      try {
+        const saved = localStorage.getItem(STORAGE_KEY);
+        if (saved) {
+          const parsed: unknown = JSON.parse(saved);
+          if (isResumeData(parsed)) {
+            dispatch({ type: "SET_RESUME", payload: parsed });
+          }
+        }
+      } catch {}
+    }
+    setHydrated(true);
+  }, [isNew]);
+
+  // Strip ?new from URL after clearing so a refresh doesn't keep resetting
+  useEffect(() => {
+    if (isNew) router.replace("/editor");
+  }, [isNew, router]);
+
+  // Auto-save to localStorage on every change (only after hydration)
+  useEffect(() => {
+    if (hydrated) localStorage.setItem(STORAGE_KEY, JSON.stringify(resume));
+  }, [resume, hydrated]);
 
   const update = (updated: ResumeData) =>
     dispatch({ type: "SET_RESUME", payload: updated });
@@ -172,7 +207,12 @@ function EditorContent() {
       {/* ── Three-column body ────────────────────────────────── */}
       <div className="flex flex-1 overflow-hidden">
         {/* Col 1 — Section nav */}
-        <SectionNav active={activeSection} onChange={setActiveSection} />
+        <SectionNav
+          active={activeSection}
+          sections={resume.sections as SectionId[]}
+          onChange={setActiveSection}
+          onReorder={(sections: SectionId[]) => update({ ...resume, sections })}
+        />
 
         {/* Col 2 — Section editor */}
         <aside className="w-96 shrink-0 overflow-y-auto border-r bg-background p-5">

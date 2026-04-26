@@ -29,13 +29,32 @@ export interface ResumeData {
   }>;
   education?: Array<{
     institution: string;
+    location: string;
     area: string;
     studyType: string;
     startDate: string;
     endDate: string;
     gpa: string;
   }>;
+  awards?: Array<{
+    title: string;
+    date: string;
+    summary: string;
+    awarder: string;
+  }>;
   sections: string[];
+}
+
+/** Runtime type guard — validates minimal shape so we don't blindly trust JSON.parse output. */
+export function isResumeData(value: unknown): value is ResumeData {
+  if (typeof value !== "object" || value === null) return false;
+  const obj = value as Record<string, unknown>;
+  return (
+    typeof obj.basics === "object" &&
+    obj.basics !== null &&
+    typeof (obj.basics as Record<string, unknown>).name === "string" &&
+    Array.isArray(obj.sections)
+  );
 }
 
 /** POST to /resume/pdf, then trigger a browser download of the returned blob. */

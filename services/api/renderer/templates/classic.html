@@ -18,12 +18,17 @@
       print-color-adjust: exact;
     }
 
-    /* ── A4 page wrapper ────────────────────────────────────────────── */
+    /* ── A4 page sizing ─────────────────────────────────────────────── */
+    @page {
+      size: A4;
+      margin: 12mm 16mm;
+    }
+
     .page {
       width: 210mm;
       min-height: 297mm;
       margin: 0 auto;
-      padding: 12mm 16mm 12mm 16mm;
+      padding: 12mm 16mm;
       background: #fff;
     }
 
@@ -204,7 +209,7 @@
     /* ── Print overrides ────────────────────────────────────────────── */
     @media print {
       body { background: #fff; }
-      .page { padding: 10mm 14mm; }
+      .page { padding: 0; min-height: auto; }
       a { color: inherit; text-decoration: none; }
     }
   </style>
@@ -223,85 +228,113 @@
     </div>
   </div>
 
-  <!-- ── Summary ─────────────────────────────────────────── -->
-  {{ if .Basics.Summaries }}
-  <div class="section summary">
-    <div class="section-title">{{ heading $ "summary" "Summary" }}</div>
-    {{ range .Basics.Summaries }}
-    <p>{{ . }}</p>
-    {{ end }}
-  </div>
-  {{ end }}
+  <!-- ── Sections (rendered in the order specified by .Sections) ── -->
+  {{ range .Sections }}
 
-  <!-- ── Skills ──────────────────────────────────────────── -->
-  {{ if .Skills }}
-  <div class="section">
-    <div class="section-title">{{ heading $ "skills" "Skills" }}</div>
-    {{ range .Skills }}
-    <div class="skills-group">
-      {{ if .Name }}<span class="skill-label">{{ .Name }}</span>{{ end }}
-      <span class="skill-keywords">{{ range $i, $k := .Keywords }}{{ if $i }}, {{ end }}{{ $k }}{{ end }}</span>
-    </div>
-    {{ end }}
-  </div>
-  {{ end }}
-
-  <!-- ── Work Experience ─────────────────────────────────── -->
-  {{ if .Work }}
-  <div class="section">
-    <div class="section-title">{{ heading $ "work" "Experience" }}</div>
-    {{ range .Work }}
-    <div class="entry">
-      <div class="entry-header">
-        <span class="position">{{ .Position }}</span>
-        <span class="dates">{{ .StartDate }}{{ if .EndDate }} - {{ .EndDate }}{{ end }}</span>
+    {{- if eq . "profile" -}}
+      {{ if $.Basics.Summaries }}
+      <div class="section summary">
+        <div class="section-title">{{ heading $ "summary" "Summary" }}</div>
+        {{ range $.Basics.Summaries }}
+        <p>{{ . }}</p>
+        {{ end }}
       </div>
-      <div class="entry-meta">
-        {{ .Company }}{{ if .Location }}, {{ .Location }}{{ end }}
-      </div>
-      {{ if .Highlights }}
-      <ul>
-        {{ range .Highlights }}<li>{{ . }}</li>{{ end }}
-      </ul>
       {{ end }}
-    </div>
-    {{ end }}
-  </div>
-  {{ end }}
+    {{- end -}}
 
-  <!-- ── Projects ────────────────────────────────────────── -->
-  {{ if .Projects }}
-  <div class="section">
-    <div class="section-title">{{ heading $ "projects" "Projects" }}</div>
-    {{ range .Projects }}
-    <div class="project">
-      <div class="project-header">
-        <span class="project-name">{{ .Name }}</span>
-        {{ if .Keywords }}<span class="project-keywords">{{ range $i, $k := .Keywords }}{{ if $i }}, {{ end }}{{ $k }}{{ end }}</span>{{ end }}
-        {{ if .URL }}<a class="project-url" href="{{ .URL }}">{{ .URL }}</a>{{ end }}
+    {{- if eq . "skills" -}}
+      {{ if $.Skills }}
+      <div class="section">
+        <div class="section-title">{{ heading $ "skills" "Skills" }}</div>
+        {{ range $.Skills }}
+        <div class="skills-group">
+          {{ if .Name }}<span class="skill-label">{{ .Name }}</span>{{ end }}
+          <span class="skill-keywords">{{ range $i, $k := .Keywords }}{{ if $i }}, {{ end }}{{ $k }}{{ end }}</span>
+        </div>
+        {{ end }}
       </div>
-      {{ if .Description }}<div class="project-desc">{{ .Description }}</div>{{ end }}
-    </div>
-    {{ end }}
-  </div>
-  {{ end }}
+      {{ end }}
+    {{- end -}}
 
-  <!-- ── Education ───────────────────────────────────────── -->
-  {{ if .Education }}
-  <div class="section">
-    <div class="section-title">{{ heading $ "education" "Education" }}</div>
-    {{ range .Education }}
-    <div class="education-entry">
-      <div class="edu-header">
-        <span class="degree">{{ .StudyType }}{{ if .Area }} - {{ .Area }}{{ end }}</span>
-        <span class="dates">{{ .StartDate }}{{ if .EndDate }} - {{ .EndDate }}{{ end }}</span>
+    {{- if eq . "work" -}}
+      {{ if $.Work }}
+      <div class="section">
+        <div class="section-title">{{ heading $ "work" "Experience" }}</div>
+        {{ range $.Work }}
+        <div class="entry">
+          <div class="entry-header">
+            <span class="position">{{ .Position }}</span>
+            <span class="dates">{{ .StartDate }}{{ if .EndDate }} - {{ .EndDate }}{{ end }}</span>
+          </div>
+          <div class="entry-meta">
+            {{ .Company }}{{ if .Location }}, {{ .Location }}{{ end }}
+          </div>
+          {{ if .Highlights }}
+          <ul>
+            {{ range .Highlights }}<li>{{ . }}</li>{{ end }}
+          </ul>
+          {{ end }}
+        </div>
+        {{ end }}
       </div>
-      <div class="edu-meta">
-        {{ .Institution }}{{ if .GPA }} {{ .GPA }}{{ end }}
+      {{ end }}
+    {{- end -}}
+
+    {{- if eq . "projects" -}}
+      {{ if $.Projects }}
+      <div class="section">
+        <div class="section-title">{{ heading $ "projects" "Projects" }}</div>
+        {{ range $.Projects }}
+        <div class="project">
+          <div class="project-header">
+            <span class="project-name">{{ .Name }}</span>
+            {{ if .Keywords }}<span class="project-keywords">{{ range $i, $k := .Keywords }}{{ if $i }}, {{ end }}{{ $k }}{{ end }}</span>{{ end }}
+            {{ if .URL }}<a class="project-url" href="{{ .URL }}">{{ .URL }}</a>{{ end }}
+          </div>
+          {{ if .Description }}<div class="project-desc">{{ .Description }}</div>{{ end }}
+        </div>
+        {{ end }}
       </div>
-    </div>
-    {{ end }}
-  </div>
+      {{ end }}
+    {{- end -}}
+
+    {{- if eq . "education" -}}
+      {{ if $.Education }}
+      <div class="section">
+        <div class="section-title">{{ heading $ "education" "Education" }}</div>
+        {{ range $.Education }}
+        <div class="education-entry">
+          <div class="edu-header">
+            <span class="degree">{{ .StudyType }}{{ if .Area }} - {{ .Area }}{{ end }}</span>
+            <span class="dates">{{ .StartDate }}{{ if .EndDate }} - {{ .EndDate }}{{ end }}</span>
+          </div>
+          <div class="edu-meta">
+            {{ .Institution }}{{ if .Location }}, {{ .Location }}{{ end }}{{ if .GPA }} {{ .GPA }}{{ end }}
+          </div>
+        </div>
+        {{ end }}
+      </div>
+      {{ end }}
+    {{- end -}}
+
+    {{- if eq . "awards" -}}
+      {{ if $.Awards }}
+      <div class="section">
+        <div class="section-title">{{ heading $ "awards" "Awards" }}</div>
+        {{ range $.Awards }}
+        <div class="entry">
+          <div class="entry-header">
+            <span class="position">{{ .Title }}</span>
+            {{ if .Date }}<span class="dates">{{ .Date }}</span>{{ end }}
+          </div>
+          {{ if .Awarder }}<div class="entry-meta">{{ .Awarder }}</div>{{ end }}
+          {{ if .Summary }}<p style="font-size:9pt;color:#333;line-height:1.5;">{{ .Summary }}</p>{{ end }}
+        </div>
+        {{ end }}
+      </div>
+      {{ end }}
+    {{- end -}}
+
   {{ end }}
 
 </div>

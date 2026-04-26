@@ -24,6 +24,7 @@ export default function EducationEditor({ resume, onChange }: Props) {
         ...education,
         {
           institution: "",
+          location: "",
           area: "",
           studyType: "",
           startDate: "",
@@ -76,6 +77,14 @@ export default function EducationEditor({ resume, onChange }: Props) {
                 value={edu.institution}
                 onChange={(e) => update(i, "institution", e.target.value)}
                 placeholder="University of Example"
+              />
+            </div>
+            <div className="flex flex-col gap-1.5">
+              <Label>Location</Label>
+              <Input
+                value={edu.location}
+                onChange={(e) => update(i, "location", e.target.value)}
+                placeholder="City, Country"
               />
             </div>
             <div className="flex flex-col gap-1.5">

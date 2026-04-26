@@ -29,7 +29,8 @@ export default function SectionHeading({
       <Input
         value={value}
         onChange={(e) => setHeading(e.target.value)}
-        className="text-sm font-semibold uppercase tracking-wide h-auto py-0 px-1 border-none bg-transparent text-muted-foreground focus-visible:ring-1 focus-visible:ring-ring"
+        placeholder="Section Heading"
+        className="text-sm font-semibold uppercase tracking-wide h-auto py-0 px-1 border-none bg-transparent text-muted-foreground placeholder:font-normal placeholder:normal-case placeholder:text-muted-foreground/40 focus-visible:ring-1 focus-visible:ring-ring"
         aria-label={`${defaultLabel} section heading`}
       />
     </div>

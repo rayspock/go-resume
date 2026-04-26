@@ -138,6 +138,7 @@ export default function ResumeForm({ resume, onChange }: Props) {
         ...education,
         {
           institution: "",
+          location: "",
           area: "",
           studyType: "",
           startDate: "",
