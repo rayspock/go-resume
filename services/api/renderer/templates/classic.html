@@ -312,6 +312,24 @@
       {{ end }}
     {{- end -}}
 
+    {{- if eq . "awards" -}}
+      {{ if $.Awards }}
+      <div class="section">
+        <div class="section-title">{{ heading $ "awards" "Awards" }}</div>
+        {{ range $.Awards }}
+        <div class="entry">
+          <div class="entry-header">
+            <span class="position">{{ .Title }}</span>
+            {{ if .Date }}<span class="dates">{{ .Date }}</span>{{ end }}
+          </div>
+          {{ if .Awarder }}<div class="entry-meta">{{ .Awarder }}</div>{{ end }}
+          {{ if .Summary }}<p style="font-size:9pt;color:#333;line-height:1.5;">{{ .Summary }}</p>{{ end }}
+        </div>
+        {{ end }}
+      </div>
+      {{ end }}
+    {{- end -}}
+
   {{ end }}
 
 </div>

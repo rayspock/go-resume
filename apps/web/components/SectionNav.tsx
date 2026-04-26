@@ -24,6 +24,7 @@ import {
   GripVertical,
   LayoutTemplate,
   ListChecks,
+  Trophy,
   User,
 } from "lucide-react";
 
@@ -33,7 +34,8 @@ export type SectionId =
   | "skills"
   | "work"
   | "projects"
-  | "education";
+  | "education"
+  | "awards";
 
 export const SECTION_META: Record<
   SectionId,
@@ -45,6 +47,7 @@ export const SECTION_META: Record<
   work: { label: "Experience", Icon: Briefcase },
   projects: { label: "Projects", Icon: FolderOpen },
   education: { label: "Education", Icon: GraduationCap },
+  awards: { label: "Awards", Icon: Trophy },
 };
 
 // Sections that cannot be reordered

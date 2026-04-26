@@ -35,6 +35,12 @@ export interface ResumeData {
     endDate: string;
     gpa: string;
   }>;
+  awards?: Array<{
+    title: string;
+    date: string;
+    summary: string;
+    awarder: string;
+  }>;
   sections: string[];
 }
 

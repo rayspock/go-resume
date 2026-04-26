@@ -25,7 +25,7 @@ go-resume/
 │       │   ├── apple-icon.png         # Apple touch icon (180×180)
 │       │   └── favicon.ico            # Favicon (48×48)
 │       ├── components/
-│       │   ├── editors/               # Section editors (Profile, Skills, Experience, …)
+│       │   ├── editors/               # Section editors (Profile, Skills, Experience, Awards, …)
 │       │   ├── SectionNav.tsx         # Left sidebar section navigation
 │       │   ├── ResumePreview.tsx      # Live iframe preview
 │       │   ├── ImportJsonDialog.tsx    # JSON import dialog

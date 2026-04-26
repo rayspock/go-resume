@@ -23,7 +23,7 @@ go-resume/
 │       │   ├── apple-icon.png         # Apple touch icon (180×180)
 │       │   └── favicon.ico            # Favicon (48×48)
 │       ├── components/
-│       │   ├── editors/               # Section editors (Profile, Skills, Experience, …)
+│       │   ├── editors/               # Section editors (Profile, Skills, Experience, Awards, …)
 │       │   ├── SectionNav.tsx         # Left sidebar section navigation
 │       │   ├── ResumePreview.tsx      # Live iframe preview
 │       │   ├── ImportJsonDialog.tsx    # JSON import dialog
@@ -81,6 +81,8 @@ rm -rf /tmp/cc-skills-golang
 
 - **Linter & formatter**: use **Biome** exclusively — never ESLint or Prettier.
   Run `pnpm lint` (`biome check .`) and `pnpm check` (`biome check --write .`).
+  Never add `eslint-disable` or `eslint-disable-line` comments — they have no
+  effect. Use `// biome-ignore` when a suppression is genuinely needed.
 - **No `dangerouslySetInnerHTML`**: when embedding server-generated HTML (e.g.
   resume preview), use an `<iframe srcDoc={html}>` so the template's styles are
   fully isolated from Tailwind preflight and the surrounding app.
@@ -91,7 +93,7 @@ rm -rf /tmp/cc-skills-golang
 - **API client**: all backend calls go through `lib/api.ts`; never fetch directly
   from components.
 - **Section editors**: each section (Profile, Skills, Experience, Projects,
-  Education) has its own editor component in `components/editors/`. Each includes
+  Education, Awards) has its own editor component in `components/editors/`. Each includes
   an editable `SectionHeading` that updates `resume.headings[key]`.
 - **Favicons and icons**: placed in `app/` using the Next.js file convention
   (`favicon.ico`, `icon.png`, `apple-icon.png`) — no manual `<link>` tags needed.

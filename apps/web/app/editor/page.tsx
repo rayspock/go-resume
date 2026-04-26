@@ -3,6 +3,7 @@
 import ImportJsonDialog from "@/components/ImportJsonDialog";
 import ResumePreview from "@/components/ResumePreview";
 import SectionNav, { type SectionId } from "@/components/SectionNav";
+import AwardsEditor from "@/components/editors/AwardsEditor";
 import EducationEditor from "@/components/editors/EducationEditor";
 import ExperienceEditor from "@/components/editors/ExperienceEditor";
 import ProfileEditor from "@/components/editors/ProfileEditor";
@@ -26,6 +27,7 @@ const INITIAL_RESUME: ResumeData = {
     work: "Experience",
     projects: "Projects",
     education: "Education",
+    awards: "Awards",
   },
   basics: {
     name: "",
@@ -38,7 +40,16 @@ const INITIAL_RESUME: ResumeData = {
   work: [],
   projects: [],
   education: [],
-  sections: ["templates", "profile", "skills", "work", "projects", "education"],
+  awards: [],
+  sections: [
+    "templates",
+    "profile",
+    "skills",
+    "work",
+    "projects",
+    "education",
+    "awards",
+  ],
 };
 
 type Action = { type: "SET_RESUME"; payload: ResumeData };
@@ -66,6 +77,8 @@ function sectionEditor(
       return <ProjectsEditor {...props} />;
     case "education":
       return <EducationEditor {...props} />;
+    case "awards":
+      return <AwardsEditor {...props} />;
   }
 }
 
@@ -73,17 +86,8 @@ function EditorContent() {
   const searchParams = useSearchParams();
   const router = useRouter();
   const isNew = searchParams.get("new") === "true";
-  const [resume, dispatch] = useReducer(reducer, INITIAL_RESUME, () => {
-    if (isNew) {
-      localStorage.removeItem(STORAGE_KEY);
-      return INITIAL_RESUME;
-    }
-    try {
-      const saved = localStorage.getItem(STORAGE_KEY);
-      if (saved) return JSON.parse(saved) as ResumeData;
-    } catch {}
-    return INITIAL_RESUME;
-  });
+  const [resume, dispatch] = useReducer(reducer, INITIAL_RESUME);
+  const [hydrated, setHydrated] = useState(false);
   const [activeSection, setActiveSection] = useState<SectionId>("profile");
   const [loading, setLoading] = useState(false);
   const [pdfError, setPdfError] = useState<string | null>(null);
@@ -91,15 +95,33 @@ function EditorContent() {
     searchParams.get("import") === "true",
   );
 
+  // Hydrate from localStorage after mount (avoids SSR mismatch)
+  useEffect(() => {
+    if (isNew) {
+      localStorage.removeItem(STORAGE_KEY);
+    } else {
+      try {
+        const saved = localStorage.getItem(STORAGE_KEY);
+        if (saved) {
+          dispatch({
+            type: "SET_RESUME",
+            payload: JSON.parse(saved) as ResumeData,
+          });
+        }
+      } catch {}
+    }
+    setHydrated(true);
+  }, [isNew]);
+
   // Strip ?new from URL after clearing so a refresh doesn't keep resetting
   useEffect(() => {
     if (isNew) router.replace("/editor");
   }, [isNew, router]);
 
-  // Auto-save to localStorage on every change
+  // Auto-save to localStorage on every change (only after hydration)
   useEffect(() => {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(resume));
-  }, [resume]);
+    if (hydrated) localStorage.setItem(STORAGE_KEY, JSON.stringify(resume));
+  }, [resume, hydrated]);
 
   const update = (updated: ResumeData) =>
     dispatch({ type: "SET_RESUME", payload: updated });
