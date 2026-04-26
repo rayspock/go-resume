@@ -43,9 +43,13 @@ export type SectionId = (typeof SECTION_IDS)[number];
 
 const SECTION_ID_SET = new Set<string>(SECTION_IDS);
 
-/** Filter an untrusted string[] to only valid SectionIds. */
+/** Filter an untrusted string[] to only valid SectionIds, appending any missing ones. */
 export function filterSectionIds(ids: string[]): SectionId[] {
-  return ids.filter((id): id is SectionId => SECTION_ID_SET.has(id));
+  const valid = ids.filter((id): id is SectionId => SECTION_ID_SET.has(id));
+  for (const id of SECTION_IDS) {
+    if (!valid.includes(id)) valid.push(id);
+  }
+  return valid;
 }
 
 export const SECTION_META: Record<
