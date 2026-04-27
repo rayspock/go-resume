@@ -1,4 +1,4 @@
-.PHONY: api-build api-run api-test api-lint api-lint-fix web-dev web-build web-lint web-lint-fix lint lint-fix dev help
+.PHONY: api-build api-run api-test api-lint api-lint-fix api-thumbs web-dev web-build web-lint web-lint-fix lint lint-fix dev help
 
 ## ── Go API ────────────────────────────────────────────────────────────────
 api-build: ## Build the Go API binary
@@ -15,6 +15,9 @@ api-lint: ## Lint the Go API
 
 api-lint-fix: ## Auto-format Go source files
 	$(MAKE) -C services/api fmt
+
+api-thumbs: ## Regenerate template thumbnail PNGs
+	$(MAKE) -C services/api thumbs
 
 ## ── Next.js web ───────────────────────────────────────────────────────────
 web-dev: ## Start the Next.js dev server

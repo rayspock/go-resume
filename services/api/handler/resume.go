@@ -52,7 +52,7 @@ func (h *ResumeHandler) GeneratePDF(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	templateName := templateForID(resume.SelectedTemplate)
+	templateName := TemplateForID(resume.SelectedTemplate)
 
 	html, err := h.renderer.Render(&resume, templateName)
 	if err != nil {
@@ -73,15 +73,27 @@ func (h *ResumeHandler) GeneratePDF(w http.ResponseWriter, r *http.Request) {
 	_, _ = w.Write(pdfBytes)
 }
 
-// templateForID maps a selectedTemplate integer to a template filename.
-// Unknown IDs fall back to the classic template.
-func templateForID(id int) string {
-	templates := map[int]string{
-		1:  "classic.html",
-		10: "classic.html",
-	}
-	if name, ok := templates[id]; ok {
-		return name
+// TemplateInfo describes a selectable resume template.
+type TemplateInfo struct {
+	ID   int
+	Name string // human-readable label
+	File string // filename inside renderer/templates/
+}
+
+// Templates is the authoritative list of available templates.
+// Add new entries here when creating a new template file.
+var Templates = []TemplateInfo{
+	{ID: 1, Name: "Classic", File: "classic.html"},
+	{ID: 2, Name: "Modern", File: "modern.html"},
+}
+
+// TemplateForID maps a selectedTemplate integer to a template filename.
+// Unknown or legacy IDs (e.g. 10 from older JSON exports) fall back to "classic.html".
+func TemplateForID(id int) string {
+	for _, t := range Templates {
+		if t.ID == id {
+			return t.File
+		}
 	}
 	return "classic.html"
 }
@@ -96,7 +108,7 @@ func (h *ResumeHandler) RenderHTML(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	templateName := templateForID(resume.SelectedTemplate)
+	templateName := TemplateForID(resume.SelectedTemplate)
 
 	html, err := h.renderer.Render(&resume, templateName)
 	if err != nil {
