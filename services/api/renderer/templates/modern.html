@@ -1,0 +1,491 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>{{ .Basics.Name }} — Resume</title>
+  <style>
+    /* ── Reset & base ──────────────────────────────────────────────── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --accent: #1a56db;
+      --accent-light: #e8eefb;
+      --text: #2d2d2d;
+      --text-light: #555;
+      --text-muted: #777;
+      --bg-sidebar: #f4f5f7;
+      --border: #ddd;
+    }
+
+    body {
+      font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+      font-size: 9pt;
+      color: var(--text);
+      background: #fff;
+      line-height: 1.5;
+      -webkit-print-color-adjust: exact;
+      print-color-adjust: exact;
+    }
+
+    /* ── A4 page sizing ─────────────────────────────────────────────── */
+    @page {
+      size: A4;
+      margin: 12mm 0;
+    }
+
+    .page {
+      width: 210mm;
+      min-height: 297mm;
+      margin: 0 auto;
+      display: flex;
+      background: #fff;
+    }
+
+    /* ── Two-column layout ─────────────────────────────────────────── */
+    .main-col {
+      flex: 3;
+      padding: 14mm 10mm 14mm 16mm;
+    }
+
+    .sidebar {
+      flex: 2;
+      background: var(--bg-sidebar);
+      padding: 14mm 14mm 14mm 10mm;
+    }
+
+    /* ── Header ────────────────────────────────────────────────────── */
+    .header {
+      margin-bottom: 14px;
+    }
+
+    .header h1 {
+      font-size: 26pt;
+      font-weight: 800;
+      color: #1a1a1a;
+      letter-spacing: -0.5px;
+      line-height: 1.1;
+      margin-bottom: 2px;
+    }
+
+    .header-tagline {
+      font-size: 10pt;
+      font-weight: 600;
+      color: var(--accent);
+      margin-bottom: 8px;
+    }
+
+    .header-contact {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      font-size: 8.5pt;
+      color: var(--text-light);
+    }
+
+    .header-contact a {
+      color: var(--text-light);
+      text-decoration: none;
+    }
+
+    .contact-item {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .contact-icon {
+      width: 11px;
+      height: 11px;
+      fill: var(--text-muted);
+      flex-shrink: 0;
+    }
+
+    /* ── Section ───────────────────────────────────────────────────── */
+    .section {
+      margin-bottom: 12px;
+    }
+
+    .section-title {
+      font-size: 9pt;
+      font-weight: 700;
+      text-transform: uppercase;
+      color: #1a1a1a;
+      letter-spacing: 1px;
+      border-bottom: 1.5px solid #1a1a1a;
+      padding-bottom: 3px;
+      margin-bottom: 8px;
+    }
+
+    .sidebar .section-title {
+      border-bottom-color: #ccc;
+      color: var(--text);
+    }
+
+    /* ── Experience / Work ─────────────────────────────────────────── */
+    .entry {
+      margin-bottom: 10px;
+    }
+
+    .entry-title {
+      font-size: 11pt;
+      font-weight: 700;
+      color: #1a1a1a;
+    }
+
+    .entry-sub {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: baseline;
+      gap: 6px;
+      margin-bottom: 3px;
+      font-size: 9pt;
+    }
+
+    .entry-company {
+      color: var(--accent);
+      font-weight: 600;
+    }
+
+    .entry-detail {
+      display: flex;
+      align-items: center;
+      gap: 3px;
+      color: var(--text-muted);
+      font-size: 8.5pt;
+    }
+
+    .entry-detail svg {
+      width: 10px;
+      height: 10px;
+      fill: var(--text-muted);
+    }
+
+    .entry ul {
+      padding-left: 14px;
+      list-style: disc;
+    }
+
+    .entry ul li {
+      font-size: 9pt;
+      line-height: 1.55;
+      color: #333;
+      margin-bottom: 1px;
+    }
+
+    /* ── Education ─────────────────────────────────────────────────── */
+    .edu-entry {
+      margin-bottom: 8px;
+    }
+
+    .edu-degree {
+      font-size: 10.5pt;
+      font-weight: 700;
+      color: #1a1a1a;
+    }
+
+    .edu-school {
+      color: var(--accent);
+      font-weight: 600;
+      font-size: 9pt;
+    }
+
+    .edu-meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      font-size: 8.5pt;
+      color: var(--text-muted);
+    }
+
+    .edu-meta .entry-detail {
+      font-size: 8.5pt;
+    }
+
+    .edu-gpa {
+      font-size: 8.5pt;
+      color: var(--text-light);
+      font-style: italic;
+    }
+
+    /* ── Awards (sidebar) ──────────────────────────────────────────── */
+    .award-item {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 10px;
+    }
+
+    .award-icon {
+      flex-shrink: 0;
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      background: var(--accent-light);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-top: 2px;
+    }
+
+    .award-icon svg {
+      width: 14px;
+      height: 14px;
+      fill: var(--accent);
+    }
+
+    .award-content {
+      flex: 1;
+    }
+
+    .award-title {
+      font-size: 9pt;
+      font-weight: 700;
+      color: #1a1a1a;
+      line-height: 1.3;
+    }
+
+    .award-desc {
+      font-size: 8.5pt;
+      color: var(--text-light);
+      line-height: 1.45;
+    }
+
+    /* ── Skills pills (sidebar) ────────────────────────────────────── */
+    .skills-pills {
+      margin-bottom: 8px;
+    }
+
+    .skills-pills .pill-group-label {
+      font-size: 8.5pt;
+      font-weight: 600;
+      color: var(--text-light);
+      margin-bottom: 4px;
+    }
+
+    .pills {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 5px;
+      margin-bottom: 6px;
+    }
+
+    .pill {
+      display: inline-block;
+      font-size: 8.5pt;
+      padding: 3px 10px;
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      color: var(--text);
+      background: #fff;
+      white-space: nowrap;
+    }
+
+    /* ── Projects (sidebar) ────────────────────────────────────────── */
+    .project-item {
+      margin-bottom: 8px;
+    }
+
+    .project-name {
+      font-size: 9pt;
+      font-weight: 700;
+      color: var(--accent);
+      text-decoration: none;
+    }
+
+    .project-name:not([href]) {
+      color: #1a1a1a;
+    }
+
+    .project-desc {
+      font-size: 8.5pt;
+      color: var(--text-light);
+      line-height: 1.45;
+    }
+
+    .project-keywords {
+      font-size: 8pt;
+      color: var(--text-muted);
+      font-style: italic;
+    }
+
+    /* ── Print overrides ───────────────────────────────────────────── */
+    @media print {
+      body { background: #fff; }
+      .page { min-height: auto; }
+      .main-col { padding-top: 0; padding-bottom: 0; }
+      .sidebar { padding-top: 0; padding-bottom: 0; background: var(--bg-sidebar) !important; }
+      a { color: inherit; text-decoration: none; }
+    }
+  </style>
+</head>
+<body>
+<div class="page">
+
+  <!-- ══════════════════════════════════════════════════════════════ -->
+  <!-- LEFT COLUMN                                                   -->
+  <!-- ══════════════════════════════════════════════════════════════ -->
+  <div class="main-col">
+
+    <!-- ── Header ──────────────────────────────────────────── -->
+    <div class="header">
+      <h1>{{ .Basics.Name }}</h1>
+      {{ if .Basics.Website }}
+      <div class="header-tagline">{{ .Basics.Website }}</div>
+      {{ end }}
+      <div class="header-contact">
+        {{ if .Basics.Email }}
+        <span class="contact-item">
+          <svg class="contact-icon" viewBox="0 0 24 24"><path d="M4 4h16a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2zm0 2v.01L12 13l8-6.99V6H4zm0 2.41 7.4 5.55a1 1 0 0 0 1.2 0L20 8.41V18H4V8.41z"/></svg>
+          <a href="mailto:{{ .Basics.Email }}">{{ .Basics.Email }}</a>
+        </span>
+        {{ end }}
+        {{ if .Basics.Location.Address }}
+        <span class="contact-item">
+          <svg class="contact-icon" viewBox="0 0 24 24"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5a2.5 2.5 0 1 1 0-5 2.5 2.5 0 0 1 0 5z"/></svg>
+          {{ .Basics.Location.Address }}
+        </span>
+        {{ end }}
+      </div>
+    </div>
+
+    <!-- ── Sections (left column) ─────────────────────────── -->
+    {{ range .Sections }}
+
+      {{- if eq . "profile" -}}
+        {{ if $.Basics.Summaries }}
+        <div class="section">
+          <div class="section-title">{{ heading $ "summary" "Summary" }}</div>
+          {{ range $.Basics.Summaries }}
+          <p style="font-size:9pt;color:#333;line-height:1.6;margin-bottom:4px;">{{ . }}</p>
+          {{ end }}
+        </div>
+        {{ end }}
+      {{- end -}}
+
+      {{- if eq . "work" -}}
+        {{ if $.Work }}
+        <div class="section">
+          <div class="section-title">{{ heading $ "work" "Experience" }}</div>
+          {{ range $.Work }}
+          <div class="entry">
+            <div class="entry-title">{{ .Position }}</div>
+            <div class="entry-sub">
+              <span class="entry-company">{{ .Company }}</span>
+              <span class="entry-detail">
+                <svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2" ry="2" fill="none" stroke="currentColor" stroke-width="2"/><line x1="16" y1="2" x2="16" y2="6" fill="none" stroke="currentColor" stroke-width="2"/><line x1="8" y1="2" x2="8" y2="6" fill="none" stroke="currentColor" stroke-width="2"/><line x1="3" y1="10" x2="21" y2="10" fill="none" stroke="currentColor" stroke-width="2"/></svg>
+                {{ .StartDate }}{{ if .EndDate }} - {{ .EndDate }}{{ end }}
+              </span>
+              {{ if .Location }}
+              <span class="entry-detail">
+                <svg viewBox="0 0 24 24"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5a2.5 2.5 0 1 1 0-5 2.5 2.5 0 0 1 0 5z"/></svg>
+                {{ .Location }}
+              </span>
+              {{ end }}
+            </div>
+            {{ if .Highlights }}
+            <ul>
+              {{ range .Highlights }}<li>{{ . }}</li>{{ end }}
+            </ul>
+            {{ end }}
+          </div>
+          {{ end }}
+        </div>
+        {{ end }}
+      {{- end -}}
+
+      {{- if eq . "education" -}}
+        {{ if $.Education }}
+        <div class="section">
+          <div class="section-title">{{ heading $ "education" "Education" }}</div>
+          {{ range $.Education }}
+          <div class="edu-entry">
+            <div class="edu-degree">{{ .StudyType }}{{ if .Area }} — {{ .Area }}{{ end }}</div>
+            <div class="edu-school">{{ .Institution }}</div>
+            <div class="edu-meta">
+              <span class="entry-detail">
+                <svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2" ry="2" fill="none" stroke="currentColor" stroke-width="2"/><line x1="16" y1="2" x2="16" y2="6" fill="none" stroke="currentColor" stroke-width="2"/><line x1="8" y1="2" x2="8" y2="6" fill="none" stroke="currentColor" stroke-width="2"/><line x1="3" y1="10" x2="21" y2="10" fill="none" stroke="currentColor" stroke-width="2"/></svg>
+                {{ .StartDate }}{{ if .EndDate }} - {{ .EndDate }}{{ end }}
+              </span>
+              {{ if .Location }}
+              <span class="entry-detail">
+                <svg viewBox="0 0 24 24"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5a2.5 2.5 0 1 1 0-5 2.5 2.5 0 0 1 0 5z"/></svg>
+                {{ .Location }}
+              </span>
+              {{ end }}
+            </div>
+            {{ if .GPA }}<div class="edu-gpa">{{ .GPA }}</div>{{ end }}
+          </div>
+          {{ end }}
+        </div>
+        {{ end }}
+      {{- end -}}
+
+    {{ end }}
+
+  </div>
+
+  <!-- ══════════════════════════════════════════════════════════════ -->
+  <!-- RIGHT COLUMN (SIDEBAR)                                        -->
+  <!-- ══════════════════════════════════════════════════════════════ -->
+  <div class="sidebar">
+
+    {{ range .Sections }}
+
+      {{- if eq . "awards" -}}
+        {{ if $.Awards }}
+        <div class="section">
+          <div class="section-title">{{ heading $ "awards" "Awards" }}</div>
+          {{ range $.Awards }}
+          <div class="award-item">
+            <div class="award-icon">
+              <svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01z"/></svg>
+            </div>
+            <div class="award-content">
+              <div class="award-title">{{ .Title }}</div>
+              {{ if .Summary }}<div class="award-desc">{{ .Summary }}</div>{{ end }}
+            </div>
+          </div>
+          {{ end }}
+        </div>
+        {{ end }}
+      {{- end -}}
+
+      {{- if eq . "skills" -}}
+        {{ if $.Skills }}
+        <div class="section">
+          <div class="section-title">{{ heading $ "skills" "Skills" }}</div>
+          {{ range $.Skills }}
+          <div class="skills-pills">
+            {{ if .Name }}<div class="pill-group-label">{{ .Name }}</div>{{ end }}
+            <div class="pills">
+              {{ range .Keywords }}<span class="pill">{{ . }}</span>{{ end }}
+            </div>
+          </div>
+          {{ end }}
+        </div>
+        {{ end }}
+      {{- end -}}
+
+      {{- if eq . "projects" -}}
+        {{ if $.Projects }}
+        <div class="section">
+          <div class="section-title">{{ heading $ "projects" "Projects" }}</div>
+          {{ range $.Projects }}
+          <div class="project-item">
+            {{ if .URL }}<a class="project-name" href="{{ .URL }}">{{ .Name }}</a>{{ else }}<span class="project-name">{{ .Name }}</span>{{ end }}
+            {{ if .Keywords }}<div class="project-keywords">{{ range $i, $k := .Keywords }}{{ if $i }}, {{ end }}{{ $k }}{{ end }}</div>{{ end }}
+            {{ if .Description }}<div class="project-desc">{{ .Description }}</div>{{ end }}
+          </div>
+          {{ end }}
+        </div>
+        {{ end }}
+      {{- end -}}
+
+    {{ end }}
+
+  </div>
+
+</div>
+</body>
+</html>
+

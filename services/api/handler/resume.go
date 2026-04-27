@@ -84,6 +84,7 @@ type TemplateInfo struct {
 // Add new entries here when creating a new template file.
 var Templates = []TemplateInfo{
 	{ID: 1, Name: "Classic", File: "classic.html"},
+	{ID: 2, Name: "Modern", File: "modern.html"},
 }
 
 // TemplateForID maps a selectedTemplate integer to a template filename.
