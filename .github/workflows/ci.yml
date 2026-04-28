@@ -1,0 +1,70 @@
+name: CI
+
+on:
+  pull_request:
+    branches: [main]
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  # ── Go API ──────────────────────────────────────────────────────────────
+  api-lint:
+    name: API Lint
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: services/api
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-go@v5
+        with:
+          go-version-file: services/api/go.mod
+      - run: go vet ./...
+      - run: test -z "$(gofmt -l .)" || { echo "Files need gofmt:"; gofmt -l .; exit 1; }
+
+  api-test:
+    name: API Test
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: services/api
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-go@v5
+        with:
+          go-version-file: services/api/go.mod
+      - run: go test ./... -race -timeout 60s
+
+  # ── Next.js Web ─────────────────────────────────────────────────────────
+  web-lint:
+    name: Web Lint
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 10
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm --filter web lint
+
+  web-build:
+    name: Web Build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 10
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm --filter web build
