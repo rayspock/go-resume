@@ -87,18 +87,26 @@
     }
 
     /* ── Skills ─────────────────────────────────────────────────────── */
-    .skills-group {
-      margin-bottom: 2px;
+    .skills-table {
+      width: 100%;
+      border-collapse: collapse;
       font-size: 10pt;
       line-height: 1.5;
     }
 
-    .skills-group .skill-label {
-      font-style: italic;
-      margin-right: 60px;
+    .skills-table td {
+      vertical-align: top;
+      padding: 1px 0;
     }
 
-    .skills-group .skill-keywords {
+    .skills-table .skill-label {
+      font-style: italic;
+      white-space: nowrap;
+      width: 1%;
+      padding-right: 24px;
+    }
+
+    .skills-table .skill-keywords {
       color: #333;
     }
 
@@ -246,12 +254,14 @@
       {{ if $.Skills }}
       <div class="section">
         <div class="section-title">{{ heading $ "skills" "Skills" }}</div>
-        {{ range $.Skills }}
-        <div class="skills-group">
-          {{ if .Name }}<span class="skill-label">{{ .Name }}</span>{{ end }}
-          <span class="skill-keywords">{{ range $i, $k := .Keywords }}{{ if $i }}, {{ end }}{{ $k }}{{ end }}</span>
-        </div>
-        {{ end }}
+        <table class="skills-table">
+          {{ range $.Skills }}
+          <tr>
+            <td class="skill-label">{{ .Name }}</td>
+            <td class="skill-keywords">{{ range $i, $k := .Keywords }}{{ if $i }}, {{ end }}{{ $k }}{{ end }}</td>
+          </tr>
+          {{ end }}
+        </table>
       </div>
       {{ end }}
     {{- end -}}
