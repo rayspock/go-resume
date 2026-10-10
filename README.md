@@ -55,9 +55,16 @@ go-resume/
 - Go 1.24+
 - Google Chrome (or Chromium) installed and on your `PATH`
 - Node.js 20+ and [pnpm](https://pnpm.io)
-- `make`
+- [mise](https://mise.jdx.dev/getting-started.html)
+- make
 
 ## Getting started
+
+Install dependencies:
+
+```bash
+mise install
+```
 
 Install frontend dependencies (one-time):
 
