@@ -120,3 +120,27 @@ func TestRender_SectionOrdering(t *testing.T) {
 		t.Errorf("sections not in expected order: skills(%d) < work(%d) < profile(%d)", skillsIdx, workIdx, summaryIdx)
 	}
 }
+
+func TestRender_PageBreak(t *testing.T) {
+	r, err := New()
+	if err != nil {
+		t.Fatalf("New(): %v", err)
+	}
+
+	resume := sampleResume()
+	resume.Sections = []string{"profile", "skills", "pagebreak", "work", "pagebreak-1"}
+
+	for _, tmpl := range []string{"classic.html", "modern.html"} {
+		html, err := r.Render(resume, tmpl)
+		if err != nil {
+			t.Fatalf("Render(%s): %v", tmpl, err)
+		}
+
+		if !strings.Contains(html, `class="page-break"`) {
+			t.Errorf("template %s should contain page-break element", tmpl)
+		}
+		if !strings.Contains(html, "Page Break") {
+			t.Errorf("template %s should contain visual Page Break label", tmpl)
+		}
+	}
+}

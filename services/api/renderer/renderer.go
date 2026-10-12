@@ -5,6 +5,7 @@ import (
 	"embed"
 	"fmt"
 	"html/template"
+	"strings"
 
 	"github.com/rayspock/go-resume/model"
 )
@@ -19,6 +20,10 @@ func newTemplateFuncs() template.FuncMap {
 				}
 			}
 			return fallback
+		},
+		"hasPrefix": strings.HasPrefix,
+		"isPageBreak": func(s string) bool {
+			return s == "pagebreak" || strings.HasPrefix(s, "pagebreak-") || strings.HasPrefix(s, "pagebreak_")
 		},
 	}
 }
