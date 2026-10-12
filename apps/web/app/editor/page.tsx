@@ -4,7 +4,7 @@ import ImportJsonDialog from "@/components/ImportJsonDialog";
 import ResumePreview from "@/components/ResumePreview";
 import SectionNav, {
   type SectionId,
-  filterSectionIds,
+  isPageBreakId,
 } from "@/components/SectionNav";
 import AwardsEditor from "@/components/editors/AwardsEditor";
 import EducationEditor from "@/components/editors/EducationEditor";
@@ -108,7 +108,14 @@ function EditorContent() {
         if (saved) {
           const parsed: unknown = JSON.parse(saved);
           if (isResumeData(parsed)) {
-            dispatch({ type: "SET_RESUME", payload: parsed });
+            let loaded = parsed;
+            if (loaded.selectedTemplate === 2 && loaded.sections) {
+              loaded = {
+                ...loaded,
+                sections: loaded.sections.filter((s) => !isPageBreakId(s)),
+              };
+            }
+            dispatch({ type: "SET_RESUME", payload: loaded });
           }
         }
       } catch {}
@@ -155,7 +162,14 @@ function EditorContent() {
   };
 
   const handleImport = (data: ResumeData) => {
-    dispatch({ type: "SET_RESUME", payload: data });
+    let imported = data;
+    if (imported.selectedTemplate === 2 && imported.sections) {
+      imported = {
+        ...imported,
+        sections: imported.sections.filter((s) => !isPageBreakId(s)),
+      };
+    }
+    dispatch({ type: "SET_RESUME", payload: imported });
     router.replace("/editor");
   };
 
@@ -209,9 +223,9 @@ function EditorContent() {
         {/* Col 1 — Section nav */}
         <SectionNav
           active={activeSection}
-          sections={resume.sections as SectionId[]}
+          sections={resume.sections}
           onChange={setActiveSection}
-          onReorder={(sections: SectionId[]) => update({ ...resume, sections })}
+          onReorder={(sections: string[]) => update({ ...resume, sections })}
         />
 
         {/* Col 2 — Section editor */}
