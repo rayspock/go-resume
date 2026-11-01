@@ -1,2 +1,7 @@
 packages:
   - "apps/*"
+strictDepBuilds: true
+allowBuilds:
+  sharp: true
+  '@biomejs/biome': false
+  msw: false
